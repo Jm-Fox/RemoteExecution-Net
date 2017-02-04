@@ -1,5 +1,7 @@
 using RemoteExecution.Channels;
+using RemoteExecution.Config;
 using RemoteExecution.Dispatchers;
+using RemoteExecution.Dispatchers.Messages;
 
 namespace RemoteExecution.Executors
 {
@@ -8,17 +10,36 @@ namespace RemoteExecution.Executors
 	/// </summary>
 	public class RemoteExecutorFactory : IRemoteExecutorFactory
 	{
-		#region IRemoteExecutorFactory Members
+	    private readonly IMessageFactory _messageFactory;
 
-		/// <summary>
-		/// Creates remote executor for given channel, using given message dispatcher for receiving operation responses.
-		/// </summary>
-		/// <param name="channel">Duplex channel.</param>
-		/// <param name="dispatcher">Message dispatcher used for receiving operation responses.</param>
-		/// <returns>Executor.</returns>
-		public IRemoteExecutor CreateRemoteExecutor(IDuplexChannel channel, IMessageDispatcher dispatcher)
+        /// <summary>
+        /// Creates a remote executor factory using the default message factory.
+        /// </summary>
+	    public RemoteExecutorFactory()
+            : this (DefaultConfig.MessageFactory)
+	    {
+        }
+
+        /// <summary>
+        /// Creates a remote executor factory using the specified message factory.
+        /// </summary>
+        /// <param name="messageFactory"></param>
+        public RemoteExecutorFactory(IMessageFactory messageFactory)
+        {
+            _messageFactory = messageFactory;
+        }
+
+        #region IRemoteExecutorFactory Members
+
+        /// <summary>
+        /// Creates remote executor for given channel, using given message dispatcher for receiving operation responses.
+        /// </summary>
+        /// <param name="channel">Duplex channel.</param>
+        /// <param name="dispatcher">Message dispatcher used for receiving operation responses.</param>
+        /// <returns>Executor.</returns>
+        public IRemoteExecutor CreateRemoteExecutor(IDuplexChannel channel, IMessageDispatcher dispatcher)
 		{
-			return new RemoteExecutor(channel, dispatcher);
+			return new RemoteExecutor(channel, dispatcher, _messageFactory);
 		}
 
 		/// <summary>

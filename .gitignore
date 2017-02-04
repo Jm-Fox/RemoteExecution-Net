@@ -6,3 +6,4 @@ _Resharper*
 *.Debug.cachefile
 /packages/protobuf-net.2.1.0
 /packages/Lidgren.Network.1.0.2
+/packages

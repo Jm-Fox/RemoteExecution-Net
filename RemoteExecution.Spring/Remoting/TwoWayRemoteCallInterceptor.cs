@@ -1,8 +1,8 @@
 using AopAlliance.Intercept;
 using RemoteExecution.Channels;
-using RemoteExecution.Config;
 using RemoteExecution.Dispatchers;
 using RemoteExecution.Dispatchers.Handlers;
+using RemoteExecution.Dispatchers.Messages;
 
 namespace RemoteExecution.Remoting
 {
@@ -11,12 +11,14 @@ namespace RemoteExecution.Remoting
 		private readonly IOutputChannel _channel;
 		private readonly string _interfaceName;
 		private readonly IMessageDispatcher _messageDispatcher;
+	    private readonly IMessageFactory _messageFactory;
 
-		public TwoWayRemoteCallInterceptor(IOutputChannel channel, IMessageDispatcher messageDispatcher, string interfaceName)
+		public TwoWayRemoteCallInterceptor(IOutputChannel channel, IMessageDispatcher messageDispatcher, IMessageFactory messageFactory, string interfaceName)
 		{
 			_channel = channel;
 			_messageDispatcher = messageDispatcher;
 			_interfaceName = interfaceName;
+		    _messageFactory = messageFactory;
 		}
 
 		#region IMethodInterceptor Members
@@ -28,7 +30,7 @@ namespace RemoteExecution.Remoting
 			_messageDispatcher.Register(handler);
 			try
 			{
-				_channel.Send(DefaultConfig.MessageFactory.CreateRequestMessage(handler.HandledMessageType, _interfaceName, invocation.Method.Name, invocation.Arguments, true));
+				_channel.Send(_messageFactory.CreateRequestMessage(handler.HandledMessageType, _interfaceName, invocation.Method.Name, invocation.Arguments, true));
 				handler.WaitForResponse();
 			}
 			finally

@@ -17,7 +17,7 @@ namespace RemoteExecution
         /// <summary>
         /// Object used to serialize objects into byte arrays
         /// </summary>
-	    protected readonly IMessageSerializer _serializer = DefaultConfig.MessageSerializer;
+	    protected readonly IMessageSerializer _serializer;
 
         /// <summary>
         /// Designated encryption provider
@@ -28,17 +28,37 @@ namespace RemoteExecution
         /// Default constructor; will use an <see cref="UnencryptedCryptoProvider"/> for encryption
         /// </summary>
 	    public LidgrenProvider()
-            : this(new UnencryptedCryptoProvider())
+            : this(new UnencryptedCryptoProvider(), DefaultConfig.MessageSerializer)
 	    {
         }
 
         /// <summary>
-        /// Normal constructor; will use specified <see cref="ILidgrenCryptoProvider"/>
+        /// Normal constructor; will use specified <see cref="ILidgrenCryptoProvider"/>.
         /// </summary>
         /// <param name="cryptoProvider">Provider to map <see cref="IPEndPoint"/>s to their corresponding <see cref="NetEncryption"/>s</param>
         public LidgrenProvider(ILidgrenCryptoProvider cryptoProvider)
+            : this (cryptoProvider, DefaultConfig.MessageSerializer)
+        {
+        }
+
+        /// <summary>
+        /// Normal constructor; will use specified <see cref="ILidgrenCryptoProvider"/>.
+        /// </summary>
+        /// <param name="messageSerializer">Message serializer to use.</param>
+        public LidgrenProvider(IMessageSerializer messageSerializer)
+            : this (new UnencryptedCryptoProvider(), messageSerializer)
+        {
+        }
+
+        /// <summary>
+        /// Normal constructor; will use specified <see cref="ILidgrenCryptoProvider"/>.
+        /// </summary>
+        /// <param name="cryptoProvider">Provider to map <see cref="IPEndPoint"/>s to their corresponding <see cref="NetEncryption"/>s.</param>
+        /// <param name="messageSerializer">Message serializer to use.</param>
+        public LidgrenProvider(ILidgrenCryptoProvider cryptoProvider, IMessageSerializer messageSerializer)
         {
             CryptoProvider = cryptoProvider;
+            _serializer = messageSerializer;
         }
 
         #region ITransportLayerProvider Members
