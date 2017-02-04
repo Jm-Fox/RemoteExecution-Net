@@ -48,6 +48,7 @@
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
     <Compile Include="Assembly.cs" />
+    <Compile Include="BasicInterfaceResolver.cs" />
     <Compile Include="Channels\LidgrenBroadcastChannel.cs" />
     <Compile Include="Channels\LidgrenClientChannel.cs" />
     <Compile Include="Channels\LidgrenDuplexChannel.cs" />
