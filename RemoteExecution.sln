@@ -76,6 +76,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RemoteExecution.Interfaces"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RemoteExecution.Spring", "RemoteExecution.Spring\RemoteExecution.Spring.csproj", "{84FC2762-9BF2-44D6-8FD9-0B580EEFED25}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RemoteExecution.Protobuf", "RemoteExecution.Protobuf\RemoteExecution.Protobuf.csproj", "{6BACEE64-6561-4C41-8E79-B7D6321F48BA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -182,6 +184,10 @@ Global
 		{84FC2762-9BF2-44D6-8FD9-0B580EEFED25}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{84FC2762-9BF2-44D6-8FD9-0B580EEFED25}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{84FC2762-9BF2-44D6-8FD9-0B580EEFED25}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6BACEE64-6561-4C41-8E79-B7D6321F48BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6BACEE64-6561-4C41-8E79-B7D6321F48BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6BACEE64-6561-4C41-8E79-B7D6321F48BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6BACEE64-6561-4C41-8E79-B7D6321F48BA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

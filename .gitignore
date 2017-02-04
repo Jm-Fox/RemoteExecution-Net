@@ -4,3 +4,4 @@ obj
 *.suo
 _Resharper*
 *.Debug.cachefile
+/packages/protobuf-net.2.1.0
