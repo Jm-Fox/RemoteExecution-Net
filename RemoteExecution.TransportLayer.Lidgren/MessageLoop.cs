@@ -5,6 +5,9 @@ using Lidgren.Network;
 
 namespace RemoteExecution
 {
+    /// <summary>
+    /// todo: write summary
+    /// </summary>
 	public class MessageLoop
 	{
 		private readonly Action<NetIncomingMessage> _handleMessage;
@@ -12,7 +15,10 @@ namespace RemoteExecution
 		private readonly SemaphoreSlim _semaphore;
 		private readonly Thread _thread;
 
-		public MessageLoop(NetPeer peer, Action<NetIncomingMessage> handleMessage)
+        /// <summary>
+        /// todo: write summary
+        /// </summary>
+        public MessageLoop(NetPeer peer, Action<NetIncomingMessage> handleMessage)
 		{
 			_peer = peer;
 			_handleMessage = handleMessage;
@@ -30,7 +36,10 @@ namespace RemoteExecution
 			SynchronizationContext.SetSynchronizationContext(new SynchronizationContext());
 		}
 
-		public void Dispose()
+        /// <summary>
+        /// todo: write summary
+        /// </summary>
+        public void Dispose()
 		{
 			_semaphore.Release();
 			_thread.Join();

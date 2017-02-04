@@ -31,7 +31,7 @@ namespace RemoteExecution.Core.UT.Channels
 
 		public new void OnReceive(byte[] data)
 		{
-			base.OnReceive(data);
+			base.OnReceive(DeserializeMessage(data));
 		}
 
 		protected override void Close()

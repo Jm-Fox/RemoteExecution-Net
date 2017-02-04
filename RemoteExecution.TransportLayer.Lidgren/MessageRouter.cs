@@ -3,13 +3,28 @@ using Lidgren.Network;
 
 namespace RemoteExecution
 {
+    /// <summary>
+    /// todo: write summary
+    /// </summary>
 	public class MessageRouter
-	{
-		public event Action<NetConnection> ConnectionClosed;
-		public event Action<NetConnection> ConnectionOpened;
-		public event Action<NetIncomingMessage> DataReceived;
+    {
+        /// <summary>
+        /// todo: write summary
+        /// </summary>
+        public event Action<NetConnection> ConnectionClosed;
+        /// <summary>
+        /// todo: write summary
+        /// </summary>
+        public event Action<NetConnection> ConnectionOpened;
+        /// <summary>
+        /// todo: write summary
+        /// </summary>
+        public event Action<NetIncomingMessage> DataReceived;
 
-		public void Route(NetIncomingMessage msg)
+        /// <summary>
+        /// todo: write summary
+        /// </summary>
+        public void Route(NetIncomingMessage msg)
 		{
 			switch (msg.MessageType)
 			{
