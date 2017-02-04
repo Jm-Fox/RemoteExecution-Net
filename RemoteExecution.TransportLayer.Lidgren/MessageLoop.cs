@@ -5,7 +5,7 @@ using Lidgren.Network;
 
 namespace RemoteExecution
 {
-	internal class MessageLoop
+	public class MessageLoop
 	{
 		private readonly Action<NetIncomingMessage> _handleMessage;
 		private readonly NetPeer _peer;

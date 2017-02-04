@@ -3,7 +3,7 @@ using Lidgren.Network;
 
 namespace RemoteExecution
 {
-	internal class MessageRouter
+	public class MessageRouter
 	{
 		public event Action<NetConnection> ConnectionClosed;
 		public event Action<NetConnection> ConnectionOpened;
