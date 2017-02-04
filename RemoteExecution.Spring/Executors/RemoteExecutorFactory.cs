@@ -49,7 +49,7 @@ namespace RemoteExecution.Executors
 		/// <returns>Broadcast executor.</returns>
 		public IBroadcastRemoteExecutor CreateBroadcastRemoteExecutor(IBroadcastChannel channel)
 		{
-			return new BroadcastRemoteExecutor(channel);
+			return new BroadcastRemoteExecutor(channel, _messageFactory);
 		}
 
 		#endregion

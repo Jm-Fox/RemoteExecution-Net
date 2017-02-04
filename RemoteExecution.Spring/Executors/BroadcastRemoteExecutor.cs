@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Reflection;
 using RemoteExecution.Channels;
+using RemoteExecution.Dispatchers.Messages;
 using RemoteExecution.Remoting;
 using Spring.Aop.Framework;
 
@@ -10,10 +11,12 @@ namespace RemoteExecution.Executors
 	internal class BroadcastRemoteExecutor : IBroadcastRemoteExecutor
 	{
 		private readonly IBroadcastChannel _broadcastChannel;
+	    private readonly IMessageFactory _messageFactory;
 
-		public BroadcastRemoteExecutor(IBroadcastChannel broadcastChannel)
+		public BroadcastRemoteExecutor(IBroadcastChannel broadcastChannel, IMessageFactory messageFactory)
 		{
 			_broadcastChannel = broadcastChannel;
+		    _messageFactory = messageFactory;
 		}
 
 		#region IBroadcastRemoteExecutor Members
@@ -24,7 +27,7 @@ namespace RemoteExecution.Executors
 
 			VerifyInterfaceMethods(interfaceType, interfaceType.Name);
 
-			return (T)new ProxyFactory(interfaceType, new OneWayRemoteCallInterceptor(_broadcastChannel, interfaceType.Name)).GetProxy();
+			return (T)new ProxyFactory(interfaceType, new OneWayRemoteCallInterceptor(_broadcastChannel, _messageFactory, interfaceType.Name)).GetProxy();
 		}
 
 		#endregion

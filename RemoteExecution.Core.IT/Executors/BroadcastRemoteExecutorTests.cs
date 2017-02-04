@@ -1,5 +1,6 @@
 using System;
 using NUnit.Framework;
+using RemoteExecution.Config;
 using RemoteExecution.Core.IT.Helpers;
 using RemoteExecution.Executors;
 
@@ -32,7 +33,7 @@ namespace RemoteExecution.Core.IT.Executors
 		public void SetUp()
 		{
 			_broadcastChannel = new MockBroadcastChannel();
-			_subject = new BroadcastRemoteExecutor(_broadcastChannel);
+			_subject = new BroadcastRemoteExecutor(_broadcastChannel, DefaultConfig.MessageFactory);
 		}
 
 		#endregion
