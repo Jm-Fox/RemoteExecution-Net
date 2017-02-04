@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -75,20 +76,47 @@ namespace RemoteExecution.Channels
             Connection = connection;
         }
 
+        /// <summary>
+        /// Quick implementation of SenderEndPointIsExpectedByInterface
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         // Some methods might need the sender's IP. In this case, the contract will differ between the client and the server.
         // This method allows the following two methods to match:
         // Client.ICalculator: { int Add_(int x, int y); }
         // Server.ICalculator: { int Add_(int x, int y, IPEndPoint clientAddress);}
-	    private static bool SenderEndPointIsExpectedByInterface(IRequestMessage request)
+        public static bool QuickSenderEndPointIsExpectedByInterface(IRequestMessage request)
 	    {
-            // This can be more flexible, but for something that executes for every request, speed is best.
-            // If a developer wants more flexibility, they can change this method to come from an attribute
-            // on the method or something else that's friendlier
 	        string name = request.MethodName;
             return  name[name.Length - 1] == '_';
-	    }
+        }
 
-	    /// <summary>
+        /// <summary>
+        /// Slow implementation of SenderEndPointIsExpectedByInterface.
+        /// This method is INCOMPLETE. You must implement and register your own <see cref="InterfaceResolver"/>.
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        // Some methods might need the sender's IP. In this case, the contract will differ between the client and the server.
+        // This method allows the following two methods to match:
+        // Client.ICalculator: { int Add(int x, int y); }
+        //                           [RequiresIpEndPoint]
+        // Server.ICalculator: { int Add(int x, int y, IPEndPoint clientAddress);}
+        // [RequiresIpEndPoint] can be given to the client, but it doesn't make any difference. The interfaces will already be
+        // different by nature of the parameters, so why bother?
+        public static bool SlowSenderEndPointIsExpectedByInterface(IRequestMessage request)
+        {
+            return RequiresIpEndPointAttribute.RequiresIpEndPoint(
+                InterfaceResolver.Singleton.GetInterface(request.MessageType), request.MethodName);
+        }
+
+        /// <summary>
+        /// Indicates that an interface's method expects an IPEndPoint for the sender, but the sender's contract doesn't specify it.
+        /// </summary>
+        public static Func<IRequestMessage, bool> SenderEndPointIsExpectedByInterface =
+	        QuickSenderEndPointIsExpectedByInterface;
+
+        /// <summary>
         /// Handles incoming message in lidgren format.
         /// </summary>
         /// <param name="message">Message to handle.</param>
