@@ -53,8 +53,9 @@ namespace RemoteExecution.Core.IT.Executors
 
 		[Test]
 		public void Should_send_message_on_channel()
-		{
-			bool wasCalled = false;
+        {
+            Configurator.Configure();
+            bool wasCalled = false;
 			_broadcastChannel.OnSend += m => wasCalled = true;
 			_subject.Create<INotifier>().Notify("test");
 			Assert.That(wasCalled, Is.True);

@@ -18,9 +18,15 @@ namespace RemoteExecution.Core.IT.Executors
 		private MockDuplexChannel _channel;
 		private ICalculator _calculator;
 
-		#region Setup/Teardown
+        #region Setup/Teardown
 
-		[SetUp]
+        [TestFixtureSetUp]
+        public void FixtureSetup()
+        {
+            Configurator.Configure();
+        }
+
+	    [SetUp]
 		public void SetUp()
 		{
 			_messageDispatcher = new MessageDispatcher();
@@ -39,8 +45,8 @@ namespace RemoteExecution.Core.IT.Executors
 
 		[Test]
 		public void Should_return_value()
-		{
-			const int value = 33;
+        {
+            const int value = 33;
 			_channel.OnSend += msg => _messageDispatcher.Dispatch(new ResponseMessage(msg.CorrelationId, value));
 
 			Assert.That(_calculator.Add(30, 3), Is.EqualTo(value));
@@ -48,8 +54,8 @@ namespace RemoteExecution.Core.IT.Executors
 
 		[Test]
 		public void Should_support_concurrent_operations()
-		{
-			var requests = new ConcurrentStack<RequestMessage>();
+        {
+            var requests = new ConcurrentStack<RequestMessage>();
 			_channel.OnSend += r => requests.Push((RequestMessage)r);
 
 			int validResults = 0;
@@ -79,8 +85,8 @@ namespace RemoteExecution.Core.IT.Executors
 
 		[Test]
 		public void Should_throw_exception()
-		{
-			const string message = "message";
+        {
+            const string message = "message";
 			_channel.OnSend += msg => _messageDispatcher.Dispatch(new ExceptionResponseMessage(msg.CorrelationId, typeof(InvalidOperationException), message));
 
 			var ex = Assert.Throws<InvalidOperationException>(() => _calculator.Add(3, 2));

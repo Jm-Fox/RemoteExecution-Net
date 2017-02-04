@@ -40,8 +40,9 @@ namespace RemoteExecution.Core.UT.Remoting
 
 		[Test]
 		public void Should_send_message_with_method_details()
-		{
-			_repository.ReplayAll();
+        {
+            Configurator.Configure();
+            _repository.ReplayAll();
 
 			const int methodArg = 5;
 			GetInvocationHelper().Hello(methodArg);
@@ -54,8 +55,9 @@ namespace RemoteExecution.Core.UT.Remoting
 
 		[Test]
 		public void Should_send_request_message_with_no_response_expected()
-		{
-			_repository.ReplayAll();
+        {
+            Configurator.Configure();
+            _repository.ReplayAll();
 			GetInvocationHelper().Notify("text");
 
 			_channel.AssertWasCalled(ch => ch.Send(Arg<RequestMessage>.Matches(r => !r.IsResponseExpected)));

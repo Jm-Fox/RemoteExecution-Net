@@ -47,8 +47,8 @@ namespace RemoteExecution.AT.Expectations
 		[TestCase(100, 100)]
 		[TestCase(200, 100)]
 		public void Should_perform_all_operations_with_one_connection_under_load(int threadsCount, int times)
-		{
-			using (StartServer())
+        {
+            using (StartServer())
 			using (var client = OpenClientConnection())
 			{
 				var tasks = new List<TaskData>();
@@ -66,8 +66,8 @@ namespace RemoteExecution.AT.Expectations
 		[TestCase(30, 100)]
 		[TestCase(200, 100)]
 		public void Should_perform_all_operations_with_own_connection_under_load(int threadsCount, int times)
-		{
-			var tasks = new List<TaskData>();
+        {
+            var tasks = new List<TaskData>();
 			try
 			{
 				using (StartServer(threadsCount))

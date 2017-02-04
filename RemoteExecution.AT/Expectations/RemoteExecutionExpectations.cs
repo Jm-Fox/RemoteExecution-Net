@@ -35,8 +35,8 @@ namespace RemoteExecution.AT.Expectations
 
 		[Test]
 		public void Should_call_one_way_method_synchronously_by_default()
-		{
-			var sleepTime = TimeSpan.FromMilliseconds(250);
+        {
+            var sleepTime = TimeSpan.FromMilliseconds(250);
 
 			using (StartServer())
 			using (var client = OpenClientConnection())
@@ -54,8 +54,8 @@ namespace RemoteExecution.AT.Expectations
 
 		[Test]
 		public void Should_pass_server_side_exceptions()
-		{
-			using (StartServer())
+        {
+            using (StartServer())
 			using (var client = OpenClientConnection())
 			{
 				var calculator = client.RemoteExecutor.Create<ICalculator>();
@@ -66,8 +66,8 @@ namespace RemoteExecution.AT.Expectations
 
 		[Test]
 		public void Should_server_broadcast_operation()
-		{
-			const int expectedNumber = 55;
+        {
+            const int expectedNumber = 55;
 			const int connectionCount = 10;
 
 			var clientServices = new List<BroadcastService>();
@@ -96,8 +96,8 @@ namespace RemoteExecution.AT.Expectations
 
 		[Test]
 		public void Should_server_return_value_retrieved_from_client_as_callback()
-		{
-			using (StartServer())
+        {
+            using (StartServer())
 			using (var client = OpenClientConnectionWithCallback<IClientService>(new ClientService()))
 			{
 				Assert.That(client.RemoteExecutor.Create<IRemoteService>().GetHexValueUsingCallback(255), Is.EqualTo("0xFF"));
@@ -106,8 +106,8 @@ namespace RemoteExecution.AT.Expectations
 
 		[Test]
 		public void Should_successfuly_execute_remote_operation()
-		{
-			using (StartServer())
+        {
+            using (StartServer())
 			using (var client = OpenClientConnection())
 			{
 				var calculator = client.RemoteExecutor.Create<ICalculator>();
@@ -120,8 +120,8 @@ namespace RemoteExecution.AT.Expectations
 
 		[Test]
 		public void Should_throw_if_connection_is_closed_during_remote_operation_call()
-		{
-			using (StartServer())
+        {
+            using (StartServer())
 			using (var client = OpenClientConnection())
 			{
 				var remote = client.RemoteExecutor.Create<IRemoteService>();

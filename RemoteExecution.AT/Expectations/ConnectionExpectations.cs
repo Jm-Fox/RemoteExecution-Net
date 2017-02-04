@@ -11,8 +11,8 @@ namespace RemoteExecution.AT.Expectations
 	{
 		[Test]
 		public void Should_reconnect_client_with_same_executor()
-		{
-			using (StartServer())
+        {
+            using (StartServer())
 			using (var client = OpenClientConnection())
 			{
 				var calculator = client.RemoteExecutor.Create<ICalculator>();

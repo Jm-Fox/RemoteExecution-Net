@@ -68,6 +68,10 @@
       <Project>{85D95624-EC1F-461C-B923-E824C6B56955}</Project>
       <Name>RemoteExecution.TransportLayer.Lidgren</Name>
     </ProjectReference>
+    <ProjectReference Include="..\RemoteExecution\RemoteExecution.csproj">
+      <Project>{a46d4206-7d05-4bf6-a30d-4d49a925323d}</Project>
+      <Name>RemoteExecution</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

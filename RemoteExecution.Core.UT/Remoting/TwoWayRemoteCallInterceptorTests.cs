@@ -48,9 +48,15 @@ namespace RemoteExecution.Core.UT.Remoting
 			return (ITestInterface)new ProxyFactory(typeof(ITestInterface), subject).GetProxy();
 		}
 
-		#region Setup/Teardown
+        #region Setup/Teardown
 
-		[SetUp]
+        [TestFixtureSetUp]
+        public void FixtureSetup()
+        {
+            Configurator.Configure();
+        }
+
+	    [SetUp]
 		public void SetUp()
 		{
 			_repository = new MockRepository();
@@ -63,8 +69,8 @@ namespace RemoteExecution.Core.UT.Remoting
 
 		[Test]
 		public void Should_execute_operations_in_order()
-		{
-			using (_repository.Ordered())
+        {
+            using (_repository.Ordered())
 			{
 				Expect.Call(() => _messageDispatcher.Register(_responseHandler));
 
@@ -82,8 +88,8 @@ namespace RemoteExecution.Core.UT.Remoting
 
 		[Test]
 		public void Should_send_message_with_handler_id()
-		{
-			Expect.Call(_responseHandler.HandledMessageType).Return(_handlerId);
+        {
+            Expect.Call(_responseHandler.HandledMessageType).Return(_handlerId);
 			_repository.ReplayAll();
 			GetInvocationHelper().Hello(5);
 			_channel.AssertWasCalled(ch => ch.Send(Arg<IMessage>.Matches(m => m.CorrelationId == _handlerId)));
@@ -91,8 +97,8 @@ namespace RemoteExecution.Core.UT.Remoting
 
 		[Test]
 		public void Should_send_message_with_method_details()
-		{
-			Expect.Call(_responseHandler.HandledMessageType).Return(_handlerId);
+        {
+            Expect.Call(_responseHandler.HandledMessageType).Return(_handlerId);
 			_repository.ReplayAll();
 
 			const int methodArg = 5;
@@ -106,8 +112,8 @@ namespace RemoteExecution.Core.UT.Remoting
 
 		[Test]
 		public void Should_wait_for_response_even_if_method_returns_void()
-		{
-			_repository.ReplayAll();
+        {
+            _repository.ReplayAll();
 			GetInvocationHelper().Notify("text");
 
 			_channel.AssertWasCalled(ch => ch.Send(Arg<RequestMessage>.Matches(r => r.IsResponseExpected)));

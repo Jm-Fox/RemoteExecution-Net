@@ -1,5 +1,6 @@
 ﻿using System;
 using RemoteExecution.Channels;
+using RemoteExecution.Config;
 using RemoteExecution.Endpoints.Listeners;
 using RemoteExecution.Serializers;
 using RemoteExecution.TransportLayer;
@@ -11,7 +12,7 @@ namespace RemoteExecution
 	/// </summary>
 	public class LidgrenProvider : ITransportLayerProvider
 	{
-		private static readonly IMessageSerializer _serializer = new BinaryMessageSerializer();
+		private readonly IMessageSerializer _serializer = DefaultConfig.MessageSerializer;
 
 		#region ITransportLayerProvider Members
 

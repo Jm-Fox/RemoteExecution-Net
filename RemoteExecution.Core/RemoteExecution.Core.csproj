@@ -37,9 +37,6 @@
     <Reference Include="Common.Logging">
       <HintPath>..\packages\Common.Logging.1.2.0\lib\1.0\Common.Logging.dll</HintPath>
     </Reference>
-    <Reference Include="ObjectSerialization">
-      <HintPath>..\packages\ObjectSerialization-Net.1.0.26\lib\net40\ObjectSerialization.dll</HintPath>
-    </Reference>
     <Reference Include="Spring.Aop">
       <HintPath>..\packages\Spring.Aop.1.3.2\lib\net40\Spring.Aop.dll</HintPath>
     </Reference>
@@ -56,8 +53,8 @@
     <Compile Include="Channels\DuplexChannel.cs" />
     <Compile Include="Channels\OutputChannel.cs" />
     <Compile Include="Config\ConnectionConfig.cs" />
-    <Compile Include="Config\DefaultConfig.cs" />
     <Compile Include="Config\ServerConfig.cs" />
+    <Compile Include="Dispatchers\Messages\DefaultMessageFactory.cs" />
     <Compile Include="Endpoints\StatefulServerEndpoint.cs" />
     <Compile Include="Endpoints\StatelessServerEndpoint.cs" />
     <Compile Include="TransportLayer\TransportLayerResolver.cs" />
@@ -73,15 +70,8 @@
     <Compile Include="Dispatchers\OperationDispatcher.cs" />
     <Compile Include="Endpoints\GenericServerEndpoint.cs" />
     <Compile Include="Endpoints\ServerEndpoint.cs" />
-    <Compile Include="Executors\BroadcastRemoteExecutor.cs" />
-    <Compile Include="Executors\RemoteExecutor.cs" />
-    <Compile Include="Executors\RemoteExecutorFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Remoting\OneWayRemoteCallInterceptor.cs" />
-    <Compile Include="Remoting\RemoteCallInterceptor.cs" />
-    <Compile Include="Remoting\TwoWayRemoteCallInterceptor.cs" />
     <Compile Include="Schedulers\AsyncTaskScheduler.cs" />
-    <Compile Include="Serializers\BinaryMessageSerializer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

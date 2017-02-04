@@ -1,4 +1,9 @@
-﻿using RemoteExecution.TransportLayer;
+﻿using RemoteExecution.Config;
+using RemoteExecution.Dispatchers.Messages;
+using RemoteExecution.Executors;
+using RemoteExecution.Schedulers;
+using RemoteExecution.Serializers;
+using RemoteExecution.TransportLayer;
 
 namespace RemoteExecution
 {
@@ -13,7 +18,11 @@ namespace RemoteExecution
 		/// </summary>
 		public static void Configure()
 		{
-			TransportLayerResolver.Register(new LidgrenProvider());
-		}
+            DefaultConfig.MessageSerializer = new BinaryMessageSerializer();
+		    DefaultConfig.MessageFactory = new DefaultMessageFactory();
+            DefaultConfig.RemoteExecutorFactory = new RemoteExecutorFactory();
+            DefaultConfig.TaskScheduler = new AsyncTaskScheduler();
+            TransportLayerResolver.Register(new LidgrenProvider());
+        }
 	}
 }

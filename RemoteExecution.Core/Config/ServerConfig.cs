@@ -31,6 +31,7 @@ namespace RemoteExecution.Config
 		/// Default value is taken from <see cref="DefaultConfig"/>.
 		/// </summary>
 		public ITaskScheduler TaskScheduler { get; set; }
+
 		/// <summary>
 		/// Maximum connections number that would be allowed by ServerEndpoint.
 		/// Default is 128.

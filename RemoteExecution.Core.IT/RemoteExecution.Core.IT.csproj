@@ -56,6 +56,14 @@
       <Project>{DDB0303B-C762-445D-9CB1-A7D03239B660}</Project>
       <Name>RemoteExecution.Interfaces</Name>
     </ProjectReference>
+    <ProjectReference Include="..\RemoteExecution.Spring\RemoteExecution.Spring.csproj">
+      <Project>{84fc2762-9bf2-44d6-8fd9-0b580eefed25}</Project>
+      <Name>RemoteExecution.Spring</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RemoteExecution\RemoteExecution.csproj">
+      <Project>{a46d4206-7d05-4bf6-a30d-4d49a925323d}</Project>
+      <Name>RemoteExecution</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -35,6 +35,9 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ObjectSerialization, Version=1.0.26.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ObjectSerialization-Net.1.0.26\lib\net40\ObjectSerialization.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
@@ -43,6 +46,7 @@
     </Compile>
     <Compile Include="Configurator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Serializers\BinaryMessageSerializer.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\RemoteExecution.Core\RemoteExecution.Core.csproj">
@@ -53,10 +57,17 @@
       <Project>{DDB0303B-C762-445D-9CB1-A7D03239B660}</Project>
       <Name>RemoteExecution.Interfaces</Name>
     </ProjectReference>
+    <ProjectReference Include="..\RemoteExecution.Spring\RemoteExecution.Spring.csproj">
+      <Project>{84FC2762-9BF2-44D6-8FD9-0B580EEFED25}</Project>
+      <Name>RemoteExecution.Spring</Name>
+    </ProjectReference>
     <ProjectReference Include="..\RemoteExecution.TransportLayer.Lidgren\RemoteExecution.TransportLayer.Lidgren.csproj">
       <Project>{85D95624-EC1F-461C-B923-E824C6B56955}</Project>
       <Name>RemoteExecution.TransportLayer.Lidgren</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

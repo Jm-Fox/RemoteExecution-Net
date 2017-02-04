@@ -23,8 +23,9 @@ namespace RemoteExecution.TransportLayer.Lidgren.IT
 
 		[TestFixtureSetUp]
 		public void SetUp()
-		{
-			_connectionListener = new LidgrenServerConnectionListener(_applicationId, _listenAddress, _port, new BinaryMessageSerializer());
+        {
+            Configurator.Configure();
+            _connectionListener = new LidgrenServerConnectionListener(_applicationId, _listenAddress, _port, new BinaryMessageSerializer());
 
 			_dispatcher = new OperationDispatcher();
 			_dispatcher.RegisterHandler<ICalculator>(new Calculator());
@@ -47,8 +48,8 @@ namespace RemoteExecution.TransportLayer.Lidgren.IT
 
 		[Test]
 		public void Should_execute_remote_operations()
-		{
-			using (var client = CreateClientConnection())
+        {
+            using (var client = CreateClientConnection())
 			{
 				client.Open();
 				Assert.That(client.RemoteExecutor.Create<ICalculator>().Add(3, 2), Is.EqualTo(5));
