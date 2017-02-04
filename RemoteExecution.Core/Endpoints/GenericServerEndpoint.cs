@@ -15,20 +15,20 @@ namespace RemoteExecution.Endpoints
 		/// <summary>
 		/// Creates generic server endpoint with default server configuration (<see cref="DefaultConfig"/>).
 		/// </summary>
-		/// <param name="listenerUri">Listener uri used to create server connection listener.</param>
+		/// <param name="uri">Listener uri used to create server connection listener.</param>
 		/// <param name="operationDispatcherCreator">Method used to create operation dispatcher for new connection.</param>
 		/// <param name="connectionInitializer">Method used to initialize new connection. If null, no action is taken.</param>
-		public GenericServerEndpoint(string listenerUri, Func<IOperationDispatcher> operationDispatcherCreator, Action<IServerEndpoint, IRemoteConnection> connectionInitializer = null)
-			: this(listenerUri, new ServerConfig(), operationDispatcherCreator, connectionInitializer) { }
+		public GenericServerEndpoint(string uri, Func<IOperationDispatcher> operationDispatcherCreator, Action<IServerEndpoint, IRemoteConnection> connectionInitializer = null)
+			: this(uri, new ServerConfig(), operationDispatcherCreator, connectionInitializer) { }
 		/// <summary>
 		/// Creates generic server endpoint.
 		/// </summary>
-		/// <param name="listenerUri">Listener uri used to create server connection listener.</param>
+		/// <param name="uri">Listener uri used to create server connection listener.</param>
 		/// <param name="config">Server configuration.</param>
 		/// <param name="operationDispatcherCreator">Method used to create operation dispatcher for new connection.</param>
 		/// <param name="connectionInitializer">Method used to initialize new connection. If null, no action is taken.</param>
-		public GenericServerEndpoint(string listenerUri, IServerConfig config, Func<IOperationDispatcher> operationDispatcherCreator, Action<IServerEndpoint, IRemoteConnection> connectionInitializer = null)
-			: base(listenerUri, config)
+		public GenericServerEndpoint(string uri, IServerConfig config, Func<IOperationDispatcher> operationDispatcherCreator, Action<IServerEndpoint, IRemoteConnection> connectionInitializer = null)
+			: base(uri, config)
 		{
 			Initialize(operationDispatcherCreator, connectionInitializer);
 		}

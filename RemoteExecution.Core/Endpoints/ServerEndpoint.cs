@@ -37,10 +37,10 @@ namespace RemoteExecution.Endpoints
 		/// <summary>
 		/// Creates server endpoint instance.
 		/// </summary>
-		/// <param name="listenerUri">Listener uri used to create server connection listener.</param>
+		/// <param name="uri">Listener uri used to create server connection listener.</param>
 		/// <param name="config">Server configuration.</param>
-		protected ServerEndpoint(string listenerUri, IServerConfig config)
-			: this(TransportLayerResolver.CreateConnectionListenerFor(new Uri(listenerUri)), config)
+		protected ServerEndpoint(string uri, IServerConfig config)
+			: this(TransportLayerResolver.CreateConnectionListenerFor(new Uri(uri)), config)
 		{
 		}
 

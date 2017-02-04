@@ -24,10 +24,10 @@ namespace RemoteExecution.Endpoints
 		/// <summary>
 		/// Creates stateful server endpoint.
 		/// </summary>
-		/// <param name="listenerUri">Listener uri used to create server connection listener.</param>
+		/// <param name="uri">Listener uri used to create server connection listener.</param>
 		/// <param name="config">Server configuration.</param>
-		protected StatefulServerEndpoint(string listenerUri, IServerConfig config)
-			: base(listenerUri, config)
+		protected StatefulServerEndpoint(string uri, IServerConfig config)
+			: base(uri, config)
 		{
 			OnConnectionInitialize += InitializeConnection;
 		}

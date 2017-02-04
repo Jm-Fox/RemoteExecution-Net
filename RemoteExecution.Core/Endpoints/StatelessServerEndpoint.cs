@@ -22,10 +22,10 @@ namespace RemoteExecution.Endpoints
 		/// <summary>
 		/// Creates stateless server endpoint with default server configuration (<see cref="DefaultConfig"/>).
 		/// </summary>
-		/// <param name="listenerUri">Listener uri used to create server connection listener.</param>
+		/// <param name="uri">Listener uri used to create server connection listener.</param>
 		/// <param name="dispatcher">Operation dispatcher that would be used for all connections.</param>
-		public StatelessServerEndpoint(string listenerUri, IOperationDispatcher dispatcher)
-			: this(listenerUri, dispatcher, new ServerConfig()) { }
+		public StatelessServerEndpoint(string uri, IOperationDispatcher dispatcher)
+			: this(uri, dispatcher, new ServerConfig()) { }
 
 		/// <summary>
 		/// Creates stateless server endpoint.
@@ -42,11 +42,11 @@ namespace RemoteExecution.Endpoints
 		/// <summary>
 		/// Creates stateless server endpoint.
 		/// </summary>
-		/// <param name="listenerUri">Listener uri used to create server connection listener.</param>
+		/// <param name="uri">Listener uri used to create server connection listener.</param>
 		/// <param name="dispatcher">Operation dispatcher that would be used for all connections.</param>
 		/// <param name="config">Server configuration.</param>
-		public StatelessServerEndpoint(string listenerUri, IOperationDispatcher dispatcher, IServerConfig config)
-			: base(listenerUri, config)
+		public StatelessServerEndpoint(string uri, IOperationDispatcher dispatcher, IServerConfig config)
+			: base(uri, config)
 		{
 			_dispatcher = dispatcher;
 		}
