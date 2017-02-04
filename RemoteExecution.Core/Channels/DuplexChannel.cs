@@ -23,18 +23,22 @@ namespace RemoteExecution.Channels
 		{
 		}
 
-		/// <summary>
-		/// Method that should be called by implementation when message is received.
-		/// It deserializes it and fires Received event.
-		/// </summary>
-		/// <param name="data"></param>
-		protected void OnReceive(byte[] data)
+        /// <summary>
+        /// Method that should be called by implementation when message is received.
+        /// </summary>
+        /// <param name="message"></param>
+        protected void OnReceive(IMessage message)
 		{
 			if (Received != null)
-				Received(DeserializeMessage(data));
+				Received(message);
 		}
 
-		private IMessage DeserializeMessage(byte[] data)
+        /// <summary>
+        /// Deserializes a message from a byte array.
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+		protected IMessage DeserializeMessage(byte[] data)
 		{
 			var message = Serializer.Deserialize(data);
 			var request = message as IRequestMessage;

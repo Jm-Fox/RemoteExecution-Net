@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Net;
+using Lidgren.Network;
 using RemoteExecution.Channels;
 using RemoteExecution.Config;
 using RemoteExecution.Endpoints.Listeners;
@@ -12,18 +14,43 @@ namespace RemoteExecution
 	/// </summary>
 	public class LidgrenProvider : ITransportLayerProvider
 	{
-		private readonly IMessageSerializer _serializer = DefaultConfig.MessageSerializer;
+        /// <summary>
+        /// Object used to serialize objects into byte arrays
+        /// </summary>
+	    protected readonly IMessageSerializer _serializer = DefaultConfig.MessageSerializer;
 
-		#region ITransportLayerProvider Members
+        /// <summary>
+        /// Designated encryption provider
+        /// </summary>
+	    protected readonly ILidgrenCryptoProvider CryptoProvider;
 
-		/// <summary>
-		/// Creates client channel for given uri.
-		/// This implementation supports scheme in following format: net://[host]:[port]/[applicationId]
-		/// </summary>
-		/// <param name="uri">Uri used to configure client channel.</param>
-		/// <returns>Client channel.</returns>
-		/// <exception cref="ArgumentException">Thrown when uri has wrong scheme or contains wrong content.</exception>
-		public IClientChannel CreateClientChannelFor(Uri uri)
+        /// <summary>
+        /// Default constructor; will use an <see cref="UnencryptedCryptoProvider"/> for encryption
+        /// </summary>
+	    public LidgrenProvider()
+            : this(new UnencryptedCryptoProvider())
+	    {
+        }
+
+        /// <summary>
+        /// Normal constructor; will use specified <see cref="ILidgrenCryptoProvider"/>
+        /// </summary>
+        /// <param name="cryptoProvider">Provider to map <see cref="IPEndPoint"/>s to their corresponding <see cref="NetEncryption"/>s</param>
+        public LidgrenProvider(ILidgrenCryptoProvider cryptoProvider)
+        {
+            CryptoProvider = cryptoProvider;
+        }
+
+        #region ITransportLayerProvider Members
+
+        /// <summary>
+        /// Creates client channel for given uri.
+        /// This implementation supports scheme in following format: net://[host]:[port]/[applicationId]
+        /// </summary>
+        /// <param name="uri">Uri used to configure client channel.</param>
+        /// <returns>Client channel.</returns>
+        /// <exception cref="ArgumentException">Thrown when uri has wrong scheme or contains wrong content.</exception>
+        public virtual IClientChannel CreateClientChannelFor(Uri uri)
 		{
 			VerifyScheme(uri);
 			return new LidgrenClientChannel(GetApplicationId(uri), uri.Host, GetPort(uri), _serializer);
@@ -51,7 +78,12 @@ namespace RemoteExecution
 
 		#endregion
 
-		private string GetApplicationId(Uri uri)
+        /// <summary>
+        /// Gets the application ID from a Uri
+        /// </summary>
+        /// <param name="uri"></param>
+        /// <returns></returns>
+	    protected string GetApplicationId(Uri uri)
 		{
 			var applicationId = uri.LocalPath.Trim('/');
 
@@ -63,14 +95,23 @@ namespace RemoteExecution
 			return applicationId;
 		}
 
-		private ushort GetPort(Uri uri)
+        /// <summary>
+        /// Gets the port from a Uri
+        /// </summary>
+        /// <param name="uri"></param>
+        /// <returns></returns>
+	    protected ushort GetPort(Uri uri)
 		{
 			if (uri.Port <= 0)
 				throw new ArgumentException("No port provided.");
 			return (ushort)uri.Port;
 		}
 
-		private void VerifyScheme(Uri uri)
+        /// <summary>
+        /// Verifies that the current scheme matches a Uri's scheme
+        /// </summary>
+        /// <param name="uri"></param>
+	    protected void VerifyScheme(Uri uri)
 		{
 			if (uri.Scheme != Scheme)
 				throw new ArgumentException("Invalid scheme.");

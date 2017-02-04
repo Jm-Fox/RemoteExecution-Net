@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>RemoteExecution</RootNamespace>
     <AssemblyName>RemoteExecution.TransportLayer.Lidgren</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -22,6 +23,7 @@
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Debug\RemoteExecution.TransportLayer.Lidgren.XML</DocumentationFile>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -32,10 +34,11 @@
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Release\RemoteExecution.TransportLayer.Lidgren.XML</DocumentationFile>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Lidgren.Network">
-      <HintPath>..\3rdparty\Lidgren.Network.dll</HintPath>
+    <Reference Include="Lidgren.Network, Version=2012.1.7.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Lidgren.Network.1.0.2\lib\net451\Lidgren.Network.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -44,15 +47,18 @@
     <Compile Include="..\AssemblyVersion.cs">
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
+    <Compile Include="Assembly.cs" />
     <Compile Include="Channels\LidgrenBroadcastChannel.cs" />
     <Compile Include="Channels\LidgrenClientChannel.cs" />
     <Compile Include="Channels\LidgrenDuplexChannel.cs" />
     <Compile Include="Endpoints\Listeners\LidgrenServerConnectionListener.cs" />
+    <Compile Include="ILidgrenCryptoProvider.cs" />
     <Compile Include="LidgrenProvider.cs" />
     <Compile Include="MessageRouter.cs" />
     <Compile Include="SynchronizationExtensions.cs" />
     <Compile Include="MessageLoop.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UnencryptedCryptoProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\RemoteExecution.Core\RemoteExecution.Core.csproj">
@@ -63,6 +69,9 @@
       <Project>{DDB0303B-C762-445D-9CB1-A7D03239B660}</Project>
       <Name>RemoteExecution.Interfaces</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

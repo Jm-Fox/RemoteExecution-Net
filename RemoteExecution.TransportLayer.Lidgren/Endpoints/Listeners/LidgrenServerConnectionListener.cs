@@ -40,8 +40,10 @@ namespace RemoteExecution.Endpoints.Listeners
 			};
 			_serializer = serializer;
 			_netServer = new NetServer(netConfig);
+            // todo: remove debug timeout
+		    _netServer.Configuration.ConnectionTimeout = 10000f;
 
-			_messageRouter = new MessageRouter();
+            _messageRouter = new MessageRouter();
 			_messageRouter.ConnectionClosed += HandleClosedConnection;
 			_messageRouter.ConnectionOpened += HandleNewConnection;
 			_messageRouter.DataReceived += HandleReceivedData;
