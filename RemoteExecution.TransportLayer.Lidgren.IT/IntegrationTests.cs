@@ -25,7 +25,7 @@ namespace RemoteExecution.TransportLayer.Lidgren.IT
 		public void SetUp()
         {
             Configurator.Configure();
-            _connectionListener = new LidgrenServerConnectionListener(_applicationId, _listenAddress, _port, new BinaryMessageSerializer());
+            _connectionListener = new LidgrenServerConnectionListener(_applicationId, _listenAddress, _port, new BinaryMessageSerializer(), new UnencryptedCryptoProviderResolver());
 
 			_dispatcher = new OperationDispatcher();
 			_dispatcher.RegisterHandler<ICalculator>(new Calculator());
@@ -43,10 +43,10 @@ namespace RemoteExecution.TransportLayer.Lidgren.IT
 
 		private ClientConnection CreateClientConnection()
 		{
-			return new ClientConnection(new LidgrenClientChannel(_applicationId, _host, _port, new BinaryMessageSerializer()), new OperationDispatcher(), new ConnectionConfig());
+			return new ClientConnection(new LidgrenClientChannel(_applicationId, _host, _port, new BinaryMessageSerializer(), new UnencryptedCryptoProviderResolver()), new OperationDispatcher(), new ConnectionConfig());
 		}
 
-		[Test]
+	    [Test]
 		public void Should_execute_remote_operations()
         {
             using (var client = CreateClientConnection())

@@ -5,7 +5,7 @@ namespace RemoteExecution {
     /// <summary>
     /// Doesn't provide any encryption
     /// </summary>
-    public class UnencryptedCryptoProvider : ILidgrenCryptoProvider {
+    public class UnencryptedCryptoProviderResolver : ILidgrenCryptoProviderResolver {
         /// <summary>
         /// Always returns null
         /// </summary>

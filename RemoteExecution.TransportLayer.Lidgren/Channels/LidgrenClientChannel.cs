@@ -28,15 +28,16 @@ namespace RemoteExecution.Channels
 		protected ushort Port;
 		private MessageLoop _messageLoop;
 
-		/// <summary>
-		/// Creates client channel instance.
-		/// </summary>
-		/// <param name="applicationId">Application id that has to match to one used by <see cref="LidgrenServerConnectionListener"/>.</param>
-		/// <param name="host">Host to connect to.</param>
-		/// <param name="port">Port to connect to.</param>
-		/// <param name="serializer">Message serializer.</param>
-		public LidgrenClientChannel(string applicationId, string host, ushort port, IMessageSerializer serializer)
-			: base(serializer)
+        /// <summary>
+        /// Creates client channel instance.
+        /// </summary>
+        /// <param name="applicationId">Application id that has to match to one used by <see cref="LidgrenServerConnectionListener"/>.</param>
+        /// <param name="host">Host to connect to.</param>
+        /// <param name="port">Port to connect to.</param>
+        /// <param name="serializer">Message serializer.</param>
+        /// <param name="cryptoProviderResolver">Crypto provider resolver.</param>
+        public LidgrenClientChannel(string applicationId, string host, ushort port, IMessageSerializer serializer, ILidgrenCryptoProviderResolver cryptoProviderResolver)
+			: base(serializer, cryptoProviderResolver)
 		{
 			Host = host;
 			Port = port;

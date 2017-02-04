@@ -13,7 +13,7 @@ namespace RemoteExecution {
     // 3.5 Client sets up Resolve to decrypt the server's messages with the chosen AES key
     // 4. Server receives request; decrypts it using the RSA private key, and sets up Resolve as well
     // 5. Server sends encrypted success message to the client
-    public interface ILidgrenCryptoProvider {
+    public interface ILidgrenCryptoProviderResolver {
         /// <summary>
         /// Used to look up the appropriate NetEncryption for traffic to/from a given IPEndPoint; null means unencrypted
         /// </summary>

@@ -31,7 +31,7 @@ namespace RemoteExecution.Core.IT.Executors
 		{
 			_messageDispatcher = new MessageDispatcher();
 			_channel = new MockDuplexChannel();
-			_subject = new RemoteExecutor(_channel, _messageDispatcher);
+			_subject = new RemoteExecutor(_channel, _messageDispatcher, new DefaultMessageFactory());
 			_calculator = _subject.Create<ICalculator>();
 		}
 

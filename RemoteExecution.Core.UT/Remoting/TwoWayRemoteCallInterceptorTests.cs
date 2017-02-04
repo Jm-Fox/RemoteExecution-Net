@@ -18,7 +18,7 @@ namespace RemoteExecution.Core.UT.Remoting
 			private readonly IResponseHandler _responseHandler;
 
 			public TestableTwoWayRemoteCallInterceptor(IOutputChannel channel, IMessageDispatcher dispatcher, IResponseHandler responseHandler, string interfaceName)
-				: base(channel, dispatcher, interfaceName)
+				: base(channel, dispatcher, new DefaultMessageFactory(), interfaceName)
 			{
 				_responseHandler = responseHandler;
 			}

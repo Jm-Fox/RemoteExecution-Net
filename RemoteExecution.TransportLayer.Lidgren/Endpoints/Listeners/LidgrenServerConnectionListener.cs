@@ -15,7 +15,8 @@ namespace RemoteExecution.Endpoints.Listeners
 		private readonly MessageRouter _messageRouter;
 		private readonly NetServer _netServer;
 		private readonly IMessageSerializer _serializer;
-		private MessageLoop _messageLoop;
+        private readonly ILidgrenCryptoProviderResolver _cryptoProviderResolver;
+        private MessageLoop _messageLoop;
 
 		/// <summary>
 		/// Fires when channel for new connection is opened.
@@ -23,16 +24,18 @@ namespace RemoteExecution.Endpoints.Listeners
 		/// </summary>
 		public event Action<IDuplexChannel> OnChannelOpen;
 
-		/// <summary>
-		/// Creates listener instance.
-		/// </summary>
-		/// <param name="applicationId">Application id that would be used to accept/reject incoming connections.</param>
-		/// <param name="listenAddress">IP address on which listener would be listening for incoming connections. Use 0.0.0.0 to listen on all network interfaces.</param>
-		/// <param name="port">Port on which listener would be listening for incoming connections.</param>
-		/// <param name="serializer">Message serializer.</param>
-		public LidgrenServerConnectionListener(string applicationId, string listenAddress, ushort port, IMessageSerializer serializer)
-		{
-			var netConfig = new NetPeerConfiguration(applicationId)
+        /// <summary>
+        /// Creates listener instance.
+        /// </summary>
+        /// <param name="applicationId">Application id that would be used to accept/reject incoming connections.</param>
+        /// <param name="listenAddress">IP address on which listener would be listening for incoming connections. Use 0.0.0.0 to listen on all network interfaces.</param>
+        /// <param name="port">Port on which listener would be listening for incoming connections.</param>
+        /// <param name="serializer">Message serializer.</param>
+        /// <param name="cryptoProviderResolver">Crypto provider resolver.</param>
+        public LidgrenServerConnectionListener(string applicationId, string listenAddress, ushort port, IMessageSerializer serializer, ILidgrenCryptoProviderResolver cryptoProviderResolver)
+        {
+            _cryptoProviderResolver = cryptoProviderResolver;
+            var netConfig = new NetPeerConfiguration(applicationId)
 			{
 				MaximumConnections = int.MaxValue,
 				Port = port,
@@ -118,7 +121,7 @@ namespace RemoteExecution.Endpoints.Listeners
 		{
 			lock (netConnection)
 			{
-				var channel = new LidgrenDuplexChannel(netConnection, _serializer);
+				var channel = new LidgrenDuplexChannel(netConnection, _serializer, _cryptoProviderResolver);
 				if (OnChannelOpen != null)
 					OnChannelOpen(channel);
 				netConnection.Tag = channel;

@@ -16,9 +16,9 @@ namespace RemoteExecution.Channels
 		private static readonly IEnumerable<NetConnectionStatus> _validConnectionStatus = new[] { NetConnectionStatus.Connected, NetConnectionStatus.RespondedConnect };
 
         /// <summary>
-        /// Designated encryption provider
+        /// Designated encryption providerResolver
         /// </summary>
-        protected readonly ILidgrenCryptoProvider CryptoProvider;
+        protected readonly ILidgrenCryptoProviderResolver CryptoProviderResolverResolver;
 
         /// <summary>
         /// Returns true if channel is opened, otherwise false.
@@ -38,7 +38,7 @@ namespace RemoteExecution.Channels
 		/// </summary>
 		/// <param name="serializer">Message serializer.</param>
 		protected LidgrenDuplexChannel(IMessageSerializer serializer)
-			: this(serializer, new UnencryptedCryptoProvider())
+			: this(serializer, new UnencryptedCryptoProviderResolver())
 		{
 		}
 
@@ -48,7 +48,7 @@ namespace RemoteExecution.Channels
 		/// <param name="connection">Lidgren net connection.</param>
 		/// <param name="serializer">Message serializer.</param>
 		public LidgrenDuplexChannel(NetConnection connection, IMessageSerializer serializer)
-			: this(serializer, new UnencryptedCryptoProvider())
+			: this(serializer, new UnencryptedCryptoProviderResolver())
 		{
 			Connection = connection;
         }
@@ -57,11 +57,11 @@ namespace RemoteExecution.Channels
         /// Creates channel instance with specified message serializer.
         /// </summary>
         /// <param name="serializer">Message serializer.</param>
-        /// <param name="cryptoProvider">Provider to map <see cref="IPEndPoint"/>s to their corresponding <see cref="NetEncryption"/>s</param>
-        protected LidgrenDuplexChannel(IMessageSerializer serializer, ILidgrenCryptoProvider cryptoProvider)
+        /// <param name="cryptoProviderResolverResolver">Provider to map <see cref="IPEndPoint"/>s to their corresponding <see cref="NetEncryption"/>s</param>
+        protected LidgrenDuplexChannel(IMessageSerializer serializer, ILidgrenCryptoProviderResolver cryptoProviderResolverResolver)
             : base(serializer)
         {
-            CryptoProvider = cryptoProvider;
+            CryptoProviderResolverResolver = cryptoProviderResolverResolver;
         }
 
         /// <summary>
@@ -69,9 +69,9 @@ namespace RemoteExecution.Channels
         /// </summary>
         /// <param name="connection">Lidgren net connection.</param>
         /// <param name="serializer">Message serializer.</param>
-        /// <param name="cryptoProvider">Provider to map <see cref="IPEndPoint"/>s to their corresponding <see cref="NetEncryption"/>s</param>
-        public LidgrenDuplexChannel(NetConnection connection, IMessageSerializer serializer, ILidgrenCryptoProvider cryptoProvider)
-            : this(serializer, cryptoProvider)
+        /// <param name="cryptoProviderResolver">Provider to map <see cref="IPEndPoint"/>s to their corresponding <see cref="NetEncryption"/>s</param>
+        public LidgrenDuplexChannel(NetConnection connection, IMessageSerializer serializer, ILidgrenCryptoProviderResolver cryptoProviderResolver)
+            : this(serializer, cryptoProviderResolver)
         {
             Connection = connection;
         }
@@ -99,9 +99,9 @@ namespace RemoteExecution.Channels
         /// <returns></returns>
         // Some methods might need the sender's IP. In this case, the contract will differ between the client and the server.
         // This method allows the following two methods to match:
-        // Client.ICalculator: { int Add(int x, int y); }
+        // Client.ICalculator: { int Register(int x, int y); }
         //                           [RequiresIpEndPoint]
-        // Server.ICalculator: { int Add(int x, int y, IPEndPoint clientAddress);}
+        // Server.ICalculator: { int Register(int x, int y, IPEndPoint clientAddress);}
         // [RequiresIpEndPoint] can be given to the client, but it doesn't make any difference. The interfaces will already be
         // different by nature of the parameters, so why bother?
         public static bool SlowSenderEndPointIsExpectedByInterface(IRequestMessage request)
@@ -122,7 +122,7 @@ namespace RemoteExecution.Channels
         /// <param name="message">Message to handle.</param>
         public void HandleIncomingMessage(NetIncomingMessage message)
 		{
-            CryptoProvider.Resolve(message.SenderEndPoint)?.Decrypt(message);
+            CryptoProviderResolverResolver.Resolve(message.SenderEndPoint)?.Decrypt(message);
 		    byte[] bytes = message.ReadBytes(message.LengthBytes);
 		    IMessage imessage = DeserializeMessage(bytes);
             IRequestMessage request = imessage as IRequestMessage;
@@ -173,7 +173,7 @@ namespace RemoteExecution.Channels
 		{
 			var msg = Connection.Peer.CreateMessage(data.Length);
 			msg.Write(data);
-            CryptoProvider.Resolve(Connection.RemoteEndPoint)?.Encrypt(msg);
+            CryptoProviderResolverResolver.Resolve(Connection.RemoteEndPoint)?.Encrypt(msg);
 			return msg;
 		}
 	}

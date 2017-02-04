@@ -49,11 +49,12 @@
     </Compile>
     <Compile Include="Assembly.cs" />
     <Compile Include="BasicInterfaceResolver.cs" />
+    <Compile Include="BasicLidgrenCryptoProviderResolver.cs" />
     <Compile Include="Channels\LidgrenBroadcastChannel.cs" />
     <Compile Include="Channels\LidgrenClientChannel.cs" />
     <Compile Include="Channels\LidgrenDuplexChannel.cs" />
     <Compile Include="Endpoints\Listeners\LidgrenServerConnectionListener.cs" />
-    <Compile Include="ILidgrenCryptoProvider.cs" />
+    <Compile Include="ILidgrenCryptoProviderResolver.cs" />
     <Compile Include="InterfaceResolver.cs" />
     <Compile Include="LidgrenProvider.cs" />
     <Compile Include="MessageRouter.cs" />

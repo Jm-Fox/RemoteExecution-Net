@@ -23,7 +23,7 @@ namespace RemoteExecution.Core.UT.Remoting
 
 		private ITestInterface GetInvocationHelper()
 		{
-			var subject = new OneWayRemoteCallInterceptor(_channel, _interfaceName);
+			var subject = new OneWayRemoteCallInterceptor(_channel, new DefaultMessageFactory(), _interfaceName);
 			return (ITestInterface)new ProxyFactory(typeof(ITestInterface), subject).GetProxy();
 		}
 

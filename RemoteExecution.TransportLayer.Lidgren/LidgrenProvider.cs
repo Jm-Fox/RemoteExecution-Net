@@ -10,7 +10,7 @@ using RemoteExecution.TransportLayer;
 namespace RemoteExecution
 {
 	/// <summary>
-	/// Lidgren transport layer provider allowing to create client channel or server connection listener objects for given uri using Lidgren framework.
+	/// Lidgren transport layer providerResolver allowing to create client channel or server connection listener objects for given uri using Lidgren framework.
 	/// </summary>
 	public class LidgrenProvider : ITransportLayerProvider
 	{
@@ -20,44 +20,44 @@ namespace RemoteExecution
 	    protected readonly IMessageSerializer _serializer;
 
         /// <summary>
-        /// Designated encryption provider
+        /// Designated encryption providerResolver
         /// </summary>
-	    protected readonly ILidgrenCryptoProvider CryptoProvider;
+	    protected readonly ILidgrenCryptoProviderResolver CryptoProviderResolver;
 
         /// <summary>
-        /// Default constructor; will use an <see cref="UnencryptedCryptoProvider"/> for encryption
+        /// Default constructor; will use an <see cref="UnencryptedCryptoProviderResolver"/> for encryption
         /// </summary>
 	    public LidgrenProvider()
-            : this(new UnencryptedCryptoProvider(), DefaultConfig.MessageSerializer)
+            : this(new UnencryptedCryptoProviderResolver(), DefaultConfig.MessageSerializer)
 	    {
         }
 
         /// <summary>
-        /// Normal constructor; will use specified <see cref="ILidgrenCryptoProvider"/>.
+        /// Normal constructor; will use specified <see cref="ILidgrenCryptoProviderResolver"/>.
         /// </summary>
-        /// <param name="cryptoProvider">Provider to map <see cref="IPEndPoint"/>s to their corresponding <see cref="NetEncryption"/>s</param>
-        public LidgrenProvider(ILidgrenCryptoProvider cryptoProvider)
-            : this (cryptoProvider, DefaultConfig.MessageSerializer)
+        /// <param name="cryptoProviderResolver">Provider to map <see cref="IPEndPoint"/>s to their corresponding <see cref="NetEncryption"/>s</param>
+        public LidgrenProvider(ILidgrenCryptoProviderResolver cryptoProviderResolver)
+            : this (cryptoProviderResolver, DefaultConfig.MessageSerializer)
         {
         }
 
         /// <summary>
-        /// Normal constructor; will use specified <see cref="ILidgrenCryptoProvider"/>.
+        /// Normal constructor; will use specified <see cref="ILidgrenCryptoProviderResolver"/>.
         /// </summary>
         /// <param name="messageSerializer">Message serializer to use.</param>
         public LidgrenProvider(IMessageSerializer messageSerializer)
-            : this (new UnencryptedCryptoProvider(), messageSerializer)
+            : this (new UnencryptedCryptoProviderResolver(), messageSerializer)
         {
         }
 
         /// <summary>
-        /// Normal constructor; will use specified <see cref="ILidgrenCryptoProvider"/>.
+        /// Normal constructor; will use specified <see cref="ILidgrenCryptoProviderResolver"/>.
         /// </summary>
-        /// <param name="cryptoProvider">Provider to map <see cref="IPEndPoint"/>s to their corresponding <see cref="NetEncryption"/>s.</param>
+        /// <param name="cryptoProviderResolver">Provider to map <see cref="IPEndPoint"/>s to their corresponding <see cref="NetEncryption"/>s.</param>
         /// <param name="messageSerializer">Message serializer to use.</param>
-        public LidgrenProvider(ILidgrenCryptoProvider cryptoProvider, IMessageSerializer messageSerializer)
+        public LidgrenProvider(ILidgrenCryptoProviderResolver cryptoProviderResolver, IMessageSerializer messageSerializer)
         {
-            CryptoProvider = cryptoProvider;
+            CryptoProviderResolver = cryptoProviderResolver;
             _serializer = messageSerializer;
         }
 
@@ -73,7 +73,7 @@ namespace RemoteExecution
         public virtual IClientChannel CreateClientChannelFor(Uri uri)
 		{
 			VerifyScheme(uri);
-			return new LidgrenClientChannel(GetApplicationId(uri), uri.Host, GetPort(uri), _serializer);
+			return new LidgrenClientChannel(GetApplicationId(uri), uri.Host, GetPort(uri), _serializer, CryptoProviderResolver);
 		}
 
 		/// <summary>
@@ -87,7 +87,7 @@ namespace RemoteExecution
 		public IServerConnectionListener CreateConnectionListenerFor(Uri uri)
 		{
 			VerifyScheme(uri);
-			return new LidgrenServerConnectionListener(GetApplicationId(uri), uri.Host, GetPort(uri), _serializer);
+			return new LidgrenServerConnectionListener(GetApplicationId(uri), uri.Host, GetPort(uri), _serializer, CryptoProviderResolver);
 		}
 
 		/// <summary>
