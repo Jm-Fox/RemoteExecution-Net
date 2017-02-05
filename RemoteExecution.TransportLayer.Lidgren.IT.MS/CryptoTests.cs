@@ -51,6 +51,7 @@ namespace RemoteExecution.TransportLayer.Lidgren.IT.MS
         [TestMethod]
         public void TestAesCrypto()
         {
+            // Arrange
             IPEndPoint serverEndPoint = new IPEndPoint(IPAddress.Loopback, _port);
             BasicLidgrenCryptoProviderResolver resolver = new BasicLidgrenCryptoProviderResolver();
             ObservableAESEncryption encryption = new ObservableAESEncryption(_applicationId, "topsecret");
@@ -77,6 +78,7 @@ namespace RemoteExecution.TransportLayer.Lidgren.IT.MS
             using (ClientConnection client = CreateClientConnection(resolver))
             {
                 client.Open();
+                // Act + Assert
                 ICalculator calculator = client.RemoteExecutor.Create<ICalculator>();
                 Assert.AreEqual(5, calculator.Add(3, 2));
                 Assert.AreEqual(0, cryptoFired);

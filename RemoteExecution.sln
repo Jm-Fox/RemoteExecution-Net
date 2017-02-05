@@ -84,6 +84,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RemoteExecution.ServiceFabr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RemoteExecution.TransportLayer.Lidgren.IT.MS", "RemoteExecution.TransportLayer.Lidgren.IT.MS\RemoteExecution.TransportLayer.Lidgren.IT.MS.csproj", "{6CB3197A-6E38-4F20-A9F6-5F6151607C46}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RemoteExecution.Protobuf.UT.MS", "RemoteExecution.Protobuf.UT.MS\RemoteExecution.Protobuf.UT.MS.csproj", "{9523A0FB-628F-498B-9C86-E0D61CBD0963}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -206,6 +208,10 @@ Global
 		{6CB3197A-6E38-4F20-A9F6-5F6151607C46}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6CB3197A-6E38-4F20-A9F6-5F6151607C46}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6CB3197A-6E38-4F20-A9F6-5F6151607C46}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9523A0FB-628F-498B-9C86-E0D61CBD0963}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9523A0FB-628F-498B-9C86-E0D61CBD0963}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9523A0FB-628F-498B-9C86-E0D61CBD0963}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9523A0FB-628F-498B-9C86-E0D61CBD0963}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -237,5 +243,6 @@ Global
 		{C76E8C60-F51F-4227-B09B-93DD2D7838AA} = {30F692B0-D812-4D12-B5F0-5244A9B3C988}
 		{C1732741-A498-4C75-B4BF-D52E176E8CF3} = {30F692B0-D812-4D12-B5F0-5244A9B3C988}
 		{6CB3197A-6E38-4F20-A9F6-5F6151607C46} = {30F692B0-D812-4D12-B5F0-5244A9B3C988}
+		{9523A0FB-628F-498B-9C86-E0D61CBD0963} = {30F692B0-D812-4D12-B5F0-5244A9B3C988}
 	EndGlobalSection
 EndGlobal

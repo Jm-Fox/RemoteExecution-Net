@@ -26,6 +26,7 @@ namespace RemoteExecution
         [ProtoMember(4)]
         public byte[] SerializableArgs { get; set; }
         
+        [ProtoMember(5)]
         public bool IsResponseExpected { get; set; }
 
         public IOutputChannel Channel { get; set; }
@@ -40,7 +41,6 @@ namespace RemoteExecution
 
         public void Complete(MethodInfo info)
         {
-            IsResponseExpected = info.ReturnType != typeof(void);
             ParameterInfo[] infos = info.GetParameters();
             Args = new object[infos.Length];
             using (MemoryStream stream = new MemoryStream(SerializableArgs))
