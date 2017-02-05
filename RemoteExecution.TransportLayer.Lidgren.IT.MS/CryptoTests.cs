@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RemoteExecution.Channels;
@@ -55,21 +56,21 @@ namespace RemoteExecution.TransportLayer.Lidgren.IT.MS
             ObservableAESEncryption encryption = new ObservableAESEncryption(_applicationId, "topsecret");
             int cryptoFired = 0;
             const int len = 1000;
-            byte[]
-                beforeEncrypt = new byte[len],
-                afterEncrypt = new byte[len],
-                beforeDecrypt = new byte[len],
-                afterDecrypt = new byte[len];
+            // 0: request before encrypt;            1: request after encrypt
+            // 2: request received before decrypt;   3: request recieved after decrypt
+            // 4: response before encrypt;           5: response after encrypt
+            // 6: response received before decrypt;  7: response received after decrypt
+            List<byte[]> serializedBytes = new List<byte[]>();
             encryption.OnEncrypt = (b, a) =>
             {
-                b.CopyTo(beforeEncrypt, 0);
-                a.CopyTo(afterEncrypt, 0);
+                serializedBytes.Add(b);
+                serializedBytes.Add(a);
                 cryptoFired++;
             };
             encryption.OnDecrypt = (b, a) =>
             {
-                b.CopyTo(beforeDecrypt, 0);
-                a.CopyTo(afterDecrypt, 0);
+                serializedBytes.Add(b);
+                serializedBytes.Add(a);
                 cryptoFired++;
             };
             using (CreateServer(resolver))
@@ -82,13 +83,14 @@ namespace RemoteExecution.TransportLayer.Lidgren.IT.MS
                 IPEndPoint clientEndPoint = client.GetClientEndpoint();
                 resolver.Register(clientEndPoint, encryption);
                 resolver.Register(serverEndPoint, encryption);
-                client.RemoteExecutor.Create<ISilent>().Hello("john");
-                Assert.AreEqual(2, cryptoFired);
-                CollectionAssert.AreNotEqual(beforeEncrypt, afterEncrypt);
-                CollectionAssert.AreEqual(afterEncrypt, beforeDecrypt);
-                CollectionAssert.AreNotEqual(beforeDecrypt, afterDecrypt);
-                // todo: verify return encryption
                 Assert.AreEqual(11, calculator.Add(5, 6));
+                Assert.AreEqual(4, cryptoFired);
+                CollectionAssert.AreNotEqual(serializedBytes[0], serializedBytes[1]);
+                CollectionAssert.AreEqual(serializedBytes[1], serializedBytes[2]);
+                CollectionAssert.AreNotEqual(serializedBytes[2], serializedBytes[3]);
+                CollectionAssert.AreNotEqual(serializedBytes[4], serializedBytes[5]);
+                CollectionAssert.AreEqual(serializedBytes[5], serializedBytes[6]);
+                CollectionAssert.AreNotEqual(serializedBytes[6], serializedBytes[7]);
             }
         }
 

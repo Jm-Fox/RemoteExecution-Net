@@ -16,20 +16,4 @@
 
         #endregion
     }
-    public interface ISilent
-    {
-        void Hello(string name);
-    }
-
-    class Silent : ISilent
-    {
-        #region IGreeter Members
-
-        public void Hello(string name)
-        {
-            
-        }
-
-        #endregion
-    }
 }
