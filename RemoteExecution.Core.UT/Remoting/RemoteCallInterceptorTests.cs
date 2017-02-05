@@ -14,6 +14,12 @@ namespace RemoteExecution.Core.UT.Remoting
 		{
 			string Hello(int x);
 			void Notify(string text);
+            [OneWay]
+		    void DontNotifyAgain(string text);
+            [TwoWay]
+            void NotifyMeAgain(string text);
+            [OneWay]
+		    string IgnoreHello(int x);
 		}
 
 		private IMethodInterceptor _oneWayInterceptor;
@@ -46,7 +52,37 @@ namespace RemoteExecution.Core.UT.Remoting
 			_oneWayInterceptor.AssertWasNotCalled(i => i.Invoke(Arg<IMethodInvocation>.Is.Anything));
 		}
 
-		[Test]
+        [Test]
+        [TestCase(NoResultMethodExecution.OneWay)]
+        [TestCase(NoResultMethodExecution.TwoWay)]
+        public void Should_defer_execute_operations_returning_result_to_attribute_two_way(NoResultMethodExecution executionMode)
+        {
+            GetInvocationHelper(executionMode).NotifyMeAgain("test");
+            _twoWayInterceptor.AssertWasCalled(i => i.Invoke(Arg<IMethodInvocation>.Is.Anything));
+            _oneWayInterceptor.AssertWasNotCalled(i => i.Invoke(Arg<IMethodInvocation>.Is.Anything));
+        }
+
+        [Test]
+        [TestCase(NoResultMethodExecution.OneWay)]
+        [TestCase(NoResultMethodExecution.TwoWay)]
+        public void Should_defer_execute_operations_returning_result_to_attribute_one_way_1(NoResultMethodExecution executionMode)
+        {
+            GetInvocationHelper(executionMode).DontNotifyAgain("test");
+            _oneWayInterceptor.AssertWasCalled(i => i.Invoke(Arg<IMethodInvocation>.Is.Anything));
+            _twoWayInterceptor.AssertWasNotCalled(i => i.Invoke(Arg<IMethodInvocation>.Is.Anything));
+        }
+
+        [Test]
+        [TestCase(NoResultMethodExecution.OneWay)]
+        [TestCase(NoResultMethodExecution.TwoWay)]
+        public void Should_defer_execute_operations_returning_result_to_attribute_one_way_2(NoResultMethodExecution executionMode)
+        {
+            GetInvocationHelper(executionMode).IgnoreHello(5);
+            _oneWayInterceptor.AssertWasCalled(i => i.Invoke(Arg<IMethodInvocation>.Is.Anything));
+            _twoWayInterceptor.AssertWasNotCalled(i => i.Invoke(Arg<IMethodInvocation>.Is.Anything));
+        }
+
+        [Test]
 		public void Should_execute_no_result_returning_operation_as_one_way()
 		{
 			GetInvocationHelper(NoResultMethodExecution.OneWay).Notify("test");

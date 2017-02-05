@@ -20,11 +20,10 @@ namespace RemoteExecution.Remoting
 		#region IMethodInterceptor Members
 
 		public object Invoke(IMethodInvocation invocation)
-		{
-		    if (invocation.Method.ReturnType == typeof(void))
+        {
+            object[] attributes = invocation.Method.GetCustomAttributes(true);
+            if (invocation.Method.ReturnType == typeof(void) || attributes.Any(a => a is OneWayAttribute))
 		    {
-		        object[] attributes = invocation.Method.GetCustomAttributes(true);
-                // Todo: Write tests for directional attributes
 		        if (_noResultMethodExecution == NoResultMethodExecution.OneWay && !attributes.Any(a => a is TwoWayAttribute) || attributes.Any(a => a is OneWayAttribute))
 		            return _oneWayInterceptor.Invoke(invocation);
 		    }
