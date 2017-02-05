@@ -1,4 +1,3 @@
-using System;
 using AopAlliance.Intercept;
 using RemoteExecution.Channels;
 using RemoteExecution.Dispatchers.Messages;
@@ -23,7 +22,7 @@ namespace RemoteExecution.Remoting
 
 		public object Invoke(IMethodInvocation invocation)
 		{
-		    _channel.Send(_messageFactory.CreateRequestMessage(Guid.NewGuid().ToString(), _interfaceName,
+		    _channel.Send(_messageFactory.CreateRequestMessage(null, _interfaceName,
 		        invocation.Method.Name, invocation.Arguments, false));
 			return null;
 		}

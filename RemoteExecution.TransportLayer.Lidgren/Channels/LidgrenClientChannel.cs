@@ -42,8 +42,6 @@ namespace RemoteExecution.Channels
 			Host = host;
 			Port = port;
 			Client = new NetClient(new NetPeerConfiguration(applicationId));
-            // todo: remove debug timeout
-            Client.Configuration.ConnectionTimeout = 10000f;
             _messageRouter = new MessageRouter();
 			_messageRouter.DataReceived += HandleIncomingMessage;
 			_messageRouter.ConnectionClosed += c => OnConnectionClose();

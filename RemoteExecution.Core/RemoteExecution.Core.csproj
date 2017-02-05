@@ -57,6 +57,8 @@
     <Compile Include="Dispatchers\Messages\DefaultMessageFactory.cs" />
     <Compile Include="Endpoints\StatefulServerEndpoint.cs" />
     <Compile Include="Endpoints\StatelessServerEndpoint.cs" />
+    <Compile Include="Remoting\OneWayAttribute.cs" />
+    <Compile Include="Remoting\TwoWayAttribute.cs" />
     <Compile Include="TransportLayer\TransportLayerResolver.cs" />
     <Compile Include="Connections\ClientConnection.cs" />
     <Compile Include="Connections\RemoteConnection.cs" />

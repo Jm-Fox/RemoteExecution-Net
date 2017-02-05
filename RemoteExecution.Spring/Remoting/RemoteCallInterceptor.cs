@@ -1,3 +1,4 @@
+using System.Linq;
 using AopAlliance.Intercept;
 using RemoteExecution.Executors;
 
@@ -20,9 +21,14 @@ namespace RemoteExecution.Remoting
 
 		public object Invoke(IMethodInvocation invocation)
 		{
-			if (_noResultMethodExecution == NoResultMethodExecution.OneWay && invocation.Method.ReturnType == typeof(void))
-				return _oneWayInterceptor.Invoke(invocation);
-			return _twoWayInterceptor.Invoke(invocation);
+		    if (invocation.Method.ReturnType == typeof(void))
+		    {
+		        object[] attributes = invocation.Method.GetCustomAttributes(true);
+                // Todo: Write tests for directional attributes
+		        if (_noResultMethodExecution == NoResultMethodExecution.OneWay && !attributes.Any(a => a is TwoWayAttribute) || attributes.Any(a => a is OneWayAttribute))
+		            return _oneWayInterceptor.Invoke(invocation);
+		    }
+		    return _twoWayInterceptor.Invoke(invocation);
 		}
 
 		#endregion
