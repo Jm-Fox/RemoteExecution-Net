@@ -118,7 +118,7 @@ namespace RemoteExecution.Endpoints.Listeners
 		{
 			lock (netConnection)
 			{
-				var channel = new LidgrenDuplexChannel(netConnection, _serializer, _cryptoProviderResolver);
+			    var channel = new LidgrenDuplexChannel(_serializer, _cryptoProviderResolver) {Connection = netConnection};
 				if (OnChannelOpen != null)
 					OnChannelOpen(channel);
 				netConnection.Tag = channel;

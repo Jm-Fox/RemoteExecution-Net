@@ -47,22 +47,10 @@ namespace RemoteExecution.Channels
         /// </summary>
         /// <param name="serializer">Message serializer.</param>
         /// <param name="cryptoProviderResolver">Provider to map <see cref="IPEndPoint"/>s to their corresponding <see cref="NetEncryption"/>s</param>
-        protected LidgrenDuplexChannel(IMessageSerializer serializer, ILidgrenCryptoProviderResolver cryptoProviderResolver)
+        public LidgrenDuplexChannel(IMessageSerializer serializer, ILidgrenCryptoProviderResolver cryptoProviderResolver)
             : base(serializer)
         {
             CryptoProviderResolver = cryptoProviderResolver;
-        }
-
-        /// <summary>
-        /// Creates channel instance with specified net connection and message serializer.
-        /// </summary>
-        /// <param name="connection">Lidgren net connection.</param>
-        /// <param name="serializer">Message serializer.</param>
-        /// <param name="cryptoProviderResolver">Provider to map <see cref="IPEndPoint"/>s to their corresponding <see cref="NetEncryption"/>s</param>
-        public LidgrenDuplexChannel(NetConnection connection, IMessageSerializer serializer, ILidgrenCryptoProviderResolver cryptoProviderResolver)
-            : this(serializer, cryptoProviderResolver)
-        {
-            Connection = connection;
         }
 
         /// <summary>
