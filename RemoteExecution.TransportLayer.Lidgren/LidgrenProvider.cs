@@ -136,5 +136,17 @@ namespace RemoteExecution
 			if (uri.Scheme != Scheme)
 				throw new ArgumentException("Invalid scheme.");
 		}
+
+        /// <summary>
+        /// Creates client channel for given uri.
+        /// </summary>
+        /// <param name="clientId">Unused by base LidgrenProvider implementation</param>
+        /// <param name="uri">Uri used to configure client channel.</param>
+        /// <returns>Client channel.</returns>
+        /// <exception cref="ArgumentException">Thrown when uri has wrong scheme or contains wrong content.</exception>
+        public virtual IClientChannel CreateClientChannelFor(string clientId, Uri uri)
+        {
+            throw new InvalidOperationException();
+        }
 	}
 }

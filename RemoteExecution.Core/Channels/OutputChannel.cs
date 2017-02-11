@@ -9,12 +9,14 @@ namespace RemoteExecution.Channels
 	/// </summary>
 	public abstract class OutputChannel : IOutputChannel
 	{
-		/// <summary>
-		/// Serializer used to message serialization/deserialization.
-		/// </summary>
-		protected readonly IMessageSerializer Serializer;
+	    private readonly IMessageSerializer _serializer;
 
-		/// <summary>
+	    /// <summary>
+	    /// Serializer used to message serialization/deserialization.
+	    /// </summary>
+	    public virtual IMessageSerializer Serializer => _serializer;
+
+	    /// <summary>
 		/// Event fired when channel is closed.
 		/// </summary>
 		public event Action Closed;
@@ -25,7 +27,7 @@ namespace RemoteExecution.Channels
 		/// <param name="serializer">Serializer used to serialize message before send.</param>
 		protected OutputChannel(IMessageSerializer serializer)
 		{
-			Serializer = serializer;
+            _serializer = serializer;
 			Id = Guid.NewGuid();
 		}
 
@@ -53,7 +55,7 @@ namespace RemoteExecution.Channels
 		/// Sends given message through this channel.
 		/// </summary>
 		/// <param name="message">Message to send.</param>
-		public void Send(IMessage message)
+		public virtual void Send(IMessage message)
 		{
 			if (!IsOpen)
 				throw new NotConnectedException("Channel is closed.");
@@ -67,7 +69,7 @@ namespace RemoteExecution.Channels
 		/// Closes channel. 
 		/// It should not throw if channel is already closed.
 		/// </summary>
-		protected abstract void Close();
+		public abstract void Close();
 
 		/// <summary>
 		/// Fires Closed event.
@@ -83,6 +85,6 @@ namespace RemoteExecution.Channels
 		/// Sends data through channel.
 		/// </summary>
 		/// <param name="data">Data to send.</param>
-		protected abstract void SendData(byte[] data);
+		public abstract void SendData(byte[] data);
 	}
 }

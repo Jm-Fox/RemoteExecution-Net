@@ -51,14 +51,26 @@ namespace RemoteExecution.Connections
 		public RemoteConnection(string connectionUri, IOperationDispatcher dispatcher, IConnectionConfig config)
 			: this(TransportLayerResolver.CreateClientChannelFor(new Uri(connectionUri)), dispatcher, config)
 		{
-		}
+        }
 
-		#region IRemoteConnection Members
+        /// <summary>
+        /// Creates instance of remote connection with channel constructed from connectionUri.
+        /// </summary>
+        /// <param name="clientId">Identifier used to share client channels.</param>
+        /// <param name="connectionUri">Connection uri used to create channel.</param>
+        /// <param name="dispatcher">Operation dispatcher used to handle incoming operation requests from remote end.</param>
+        /// <param name="config">Connection configuration.</param>
+        public RemoteConnection(string clientId, string connectionUri, IOperationDispatcher dispatcher, IConnectionConfig config)
+            : this(TransportLayerResolver.CreateClientChannelFor(clientId, new Uri(connectionUri)), dispatcher, config)
+        {
+        }
 
-		/// <summary>
-		/// Closes connection.
-		/// </summary>
-		public void Dispose()
+        #region IRemoteConnection Members
+
+        /// <summary>
+        /// Closes connection.
+        /// </summary>
+        public void Dispose()
 		{
 			Channel.Dispose();
 		}

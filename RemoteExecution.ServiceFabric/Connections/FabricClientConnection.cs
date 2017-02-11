@@ -19,7 +19,7 @@ namespace RemoteExecution.ServiceFabric.Connections
     public class FabricClientConnection : IClientConnection
     {
         private static readonly Random Random = new Random();
-        private readonly ClientConnection clientConnection;
+        private readonly DurableClientConnection clientConnection;
         private ResolvedServiceEndpoint selectedEndpoint;
         /// <summary>
         /// Providse the resolved address of the service
@@ -42,6 +42,8 @@ namespace RemoteExecution.ServiceFabric.Connections
         public FabricClientConnection(Uri fabricAddress)
             : this(fabricAddress, ServicePartitionResolver.GetDefault())
         {
+            // todo: remove (here temporarily to stop compiler warning/error)
+            Closed?.Invoke();
         }
 
         /// <summary>
@@ -56,25 +58,20 @@ namespace RemoteExecution.ServiceFabric.Connections
             Resolver = resolver;
 
             selectedEndpoint = ResolveAnyEndpoint().Result;
-
-            clientConnection = new ClientConnection(selectedEndpoint.Address);
-            clientConnection.SetConnectionClosed(ConnectionClosed);
+            
+            clientConnection = new DurableClientConnection(selectedEndpoint.Address);
+            clientConnection.HandleClosedConnectionResponse = ConnectionClosed;
         }
 
-        private ClosedConnectionResponse ConnectionClosed()
+        private void ConnectionClosed(ClosedConnectionResponse response)
         {
-            if (SelectedPartitionDown)
+            if (IsSelectedPartitionDown())
             {
                 selectedEndpoint = ResolveAnyEndpoint().Result;
                 Uri uri = new Uri(selectedEndpoint.Address);
-                return new ClosedConnectionResponse
-                {
-                    Fail = false,
-                    ReconnectHost = uri.Host,
-                    ReconnectPort = (ushort)uri.Port
-                };
+                response.ReconnectHost = uri.Host;
+                response.ReconnectPort = (ushort)uri.Port;
             }
-            return null;
         }
 
         private async Task<ResolvedServiceEndpoint> ResolveAnyEndpoint()
@@ -89,20 +86,19 @@ namespace RemoteExecution.ServiceFabric.Connections
             return array[array.Length % random];
         }
 
-        private bool SelectedPartitionDown
+        /// <summary>
+        /// Note that this involves making a TCP call to a service possibly on another machine in the cluster. It is not fast.
+        /// </summary>
+        private bool IsSelectedPartitionDown()
         {
-            get
-            {
-                ResolvedServicePartition resolved =
-                    Resolver.ResolveAsync(FabricAddress, new ServicePartitionKey(), CancellationToken.None).Result;
-                return resolved.Endpoints.Contains(selectedEndpoint);
-            }
+            ResolvedServicePartition resolved =
+                Resolver.ResolveAsync(FabricAddress, new ServicePartitionKey(), CancellationToken.None).Result;
+            return resolved.Endpoints.Contains(selectedEndpoint);
         }
 
         /// <summary>
         /// Returns true if connection is opened, otherwise false.
         /// </summary>
-        /// todo: double check this won't cause failures during attempted reconnects
         public bool IsOpen => clientConnection.IsOpen;
 
         /// <summary>

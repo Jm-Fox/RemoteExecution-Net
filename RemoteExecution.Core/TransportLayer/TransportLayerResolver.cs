@@ -23,6 +23,18 @@ namespace RemoteExecution.TransportLayer
 			return Resolve(uri.Scheme).CreateClientChannelFor(uri);
 		}
 
+        /// <summary>
+        /// Creates client channel basing on given uri.
+        /// </summary>
+        /// <param name="clientId">Identifier used to share client channels</param>
+        /// <param name="uri">Connection uri used to create channel.</param>
+        /// <returns>Client channel.</returns>
+        /// <exception cref="UnknownTransportLayerException">Thrown if there is no registered providers for given uri scheme.</exception>
+        public static IClientChannel CreateClientChannelFor(string clientId, Uri uri)
+		{
+			return Resolve(uri.Scheme).CreateClientChannelFor(clientId, uri);
+		}
+
 		/// <summary>
 		/// Creates server connection listener basing on given uri.
 		/// </summary>
@@ -45,7 +57,7 @@ namespace RemoteExecution.TransportLayer
 				throw new ArgumentException(string.Format("There is already registered provider for '{0}' scheme.", provider.Scheme));
 		}
 
-		private static ITransportLayerProvider Resolve(string scheme)
+	    private static ITransportLayerProvider Resolve(string scheme)
 		{
 			ITransportLayerProvider provider;
 			if (!_providers.TryGetValue(scheme, out provider))

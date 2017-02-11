@@ -34,11 +34,11 @@ namespace RemoteExecution.Core.UT.Remoting
 		{
 			_repository = new MockRepository();
 			_channel = _repository.DynamicMock<IOutputChannel>();
-		}
+        }
+        
+        #endregion
 
-		#endregion
-
-		[Test]
+        [Test]
 		public void Should_send_message_with_method_details()
         {
             Configurator.Configure();

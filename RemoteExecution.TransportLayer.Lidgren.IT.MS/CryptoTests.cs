@@ -56,7 +56,6 @@ namespace RemoteExecution.TransportLayer.Lidgren.IT.MS
             BasicLidgrenCryptoProviderResolver resolver = new BasicLidgrenCryptoProviderResolver();
             ObservableAESEncryption encryption = new ObservableAESEncryption(_applicationId, "topsecret");
             int cryptoFired = 0;
-            const int len = 1000;
             // 0: request before encrypt;            1: request after encrypt
             // 2: request received before decrypt;   3: request recieved after decrypt
             // 4: response before encrypt;           5: response after encrypt

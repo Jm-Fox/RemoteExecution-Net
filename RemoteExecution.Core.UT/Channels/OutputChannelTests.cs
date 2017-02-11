@@ -27,15 +27,15 @@ namespace RemoteExecution.Core.UT.Channels
 
 		public byte[] SentData { get; private set; }
 
-		#endregion
+        #endregion
 
-		protected override void Close()
+        public override void Close()
 		{
 			_isOpen = false;
 			FireChannelClosed();
 		}
 
-		protected override void SendData(byte[] data)
+        public override void SendData(byte[] data)
 		{
 			SentData = data;
 		}

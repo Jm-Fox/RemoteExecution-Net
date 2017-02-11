@@ -66,7 +66,6 @@ namespace RemoteExecution.Endpoints.Listeners
 			if (_messageLoop != null)
 				_messageLoop.Dispose();
 			_messageLoop = null;
-
 		}
 
 		/// <summary>

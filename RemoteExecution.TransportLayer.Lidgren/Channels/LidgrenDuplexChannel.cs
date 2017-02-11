@@ -18,7 +18,7 @@ namespace RemoteExecution.Channels
         /// <summary>
         /// Designated encryption providerResolver
         /// </summary>
-        protected readonly ILidgrenCryptoProviderResolver CryptoProviderResolverResolver;
+        protected readonly ILidgrenCryptoProviderResolver CryptoProviderResolver;
 
         /// <summary>
         /// Returns true if channel is opened, otherwise false.
@@ -31,7 +31,7 @@ namespace RemoteExecution.Channels
 		/// <summary>
 		/// Lidgren net connection associated to channel.
 		/// </summary>
-		protected NetConnection Connection { get; set; }
+		public virtual NetConnection Connection { get; set; }
 
 		/// <summary>
 		/// Creates channel instance with specified message serializer.
@@ -40,28 +40,17 @@ namespace RemoteExecution.Channels
 		protected LidgrenDuplexChannel(IMessageSerializer serializer)
 			: this(serializer, new UnencryptedCryptoProviderResolver())
 		{
-		}
-
-		/// <summary>
-		/// Creates channel instance with specified net connection and message serializer.
-		/// </summary>
-		/// <param name="connection">Lidgren net connection.</param>
-		/// <param name="serializer">Message serializer.</param>
-		public LidgrenDuplexChannel(NetConnection connection, IMessageSerializer serializer)
-			: this(serializer, new UnencryptedCryptoProviderResolver())
-		{
-			Connection = connection;
         }
 
         /// <summary>
         /// Creates channel instance with specified message serializer.
         /// </summary>
         /// <param name="serializer">Message serializer.</param>
-        /// <param name="cryptoProviderResolverResolver">Provider to map <see cref="IPEndPoint"/>s to their corresponding <see cref="NetEncryption"/>s</param>
-        protected LidgrenDuplexChannel(IMessageSerializer serializer, ILidgrenCryptoProviderResolver cryptoProviderResolverResolver)
+        /// <param name="cryptoProviderResolver">Provider to map <see cref="IPEndPoint"/>s to their corresponding <see cref="NetEncryption"/>s</param>
+        protected LidgrenDuplexChannel(IMessageSerializer serializer, ILidgrenCryptoProviderResolver cryptoProviderResolver)
             : base(serializer)
         {
-            CryptoProviderResolverResolver = cryptoProviderResolverResolver;
+            CryptoProviderResolver = cryptoProviderResolver;
         }
 
         /// <summary>
@@ -120,12 +109,23 @@ namespace RemoteExecution.Channels
         /// Handles incoming message in lidgren format.
         /// </summary>
         /// <param name="message">Message to handle.</param>
-        public void HandleIncomingMessage(NetIncomingMessage message)
-		{
-            CryptoProviderResolverResolver.Resolve(message.SenderEndPoint)?.Decrypt(message);
-		    byte[] bytes = message.ReadBytes(message.LengthBytes);
-		    IMessage imessage = DeserializeMessage(bytes);
-            IRequestMessage request = imessage as IRequestMessage;
+        public virtual void HandleIncomingMessage(NetIncomingMessage message)
+        {
+            IMessage imessage;
+            try
+		    {
+		        CryptoProviderResolver.Resolve(message.SenderEndPoint)?.Decrypt(message);
+		        imessage = DeserializeMessage(message.ReadBytes(message.LengthBytes));
+		    }
+		    catch (Exception)
+		    {
+                // If a message can't be deserialized / decrypted, it's fair to assume
+                // it's either malicious or accidental, and so it should be ignored. We especially
+                // don't want any malicious messages to raise exceptions that would crash the
+                // message loop.
+		        return;
+		    }
+		    IRequestMessage request = imessage as IRequestMessage;
 		    if (request != null && SenderEndPointIsExpectedByInterface(request)) {
                 // Modified such that interface method names that end in _ will provide the Client's IP
                 object[] args2 = new object[request.Args.Length + 1];
@@ -147,7 +147,7 @@ namespace RemoteExecution.Channels
 		/// Closes channel. 
 		/// It should not throw if channel is already closed.
 		/// </summary>
-		protected override void Close()
+		public override void Close()
 		{
 			if (Connection != null && IsOpen)
 				Connection.Disconnect("Channel closed");
@@ -157,7 +157,7 @@ namespace RemoteExecution.Channels
 		/// Sends data through channel.
 		/// </summary>
 		/// <param name="data">Data to send.</param>
-		protected override void SendData(byte[] data)
+		public override void SendData(byte[] data)
 		{
 			if (!IsOpen)
 				throw new NotConnectedException("Network connection is not opened.");
@@ -173,7 +173,7 @@ namespace RemoteExecution.Channels
 		{
 			var msg = Connection.Peer.CreateMessage(data.Length);
 			msg.Write(data);
-            CryptoProviderResolverResolver.Resolve(Connection.RemoteEndPoint)?.Encrypt(msg);
+            CryptoProviderResolver.Resolve(Connection.RemoteEndPoint)?.Encrypt(msg);
 			return msg;
 		}
 	}

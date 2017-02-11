@@ -8,7 +8,7 @@
         /// <summary>
         /// Connection should fail.
         /// </summary>
-        public bool Fail;
+        public bool Abort = false;
         /// <summary>
         /// Connection should retry with specified host (may or may not be different).
         /// </summary>

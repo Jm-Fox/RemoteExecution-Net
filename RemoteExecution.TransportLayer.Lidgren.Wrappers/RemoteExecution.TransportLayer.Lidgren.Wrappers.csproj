@@ -8,7 +8,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>RemoteExecution</RootNamespace>
-    <AssemblyName>RemoteExecution.TransportLayer.Lidgren.Durable</AssemblyName>
+    <AssemblyName>RemoteExecution.TransportLayer.Lidgren.Wrappers</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -21,7 +21,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <DocumentationFile>bin\Debug\RemoteExecution.TransportLayer.Lidgren.Durable.xml</DocumentationFile>
+    <DocumentationFile>bin\Debug\RemoteExecution.TransportLayer.Lidgren.Wrappers.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -39,9 +39,12 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Channels\AggregateLidgrenClientChannel.cs" />
+    <Compile Include="Channels\LidgrenClientChannelWrapper.cs" />
+    <Compile Include="Channels\SharedLidgrenClientChannel.cs" />
     <Compile Include="Channels\DurableLidgrenClientChannel.cs" />
     <Compile Include="ClosedConnectionResponse.cs" />
+    <Compile Include="Connections\DurableClientConnection.cs" />
+    <Compile Include="SharedLidgrenProvider.cs" />
     <Compile Include="DurableLidgrenProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

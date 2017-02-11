@@ -9,12 +9,12 @@ namespace RemoteExecution.Channels
 	/// </summary>
 	public abstract class DuplexChannel : OutputChannel, IDuplexChannel
 	{
-		/// <summary>
+        /// <summary>
 		/// Fires when new message has been received through this channel.
-		/// </summary>
-		public event Action<IMessage> Received;
+        /// </summary>
+	    public event Action<IMessage> Received;
 
-		/// <summary>
+	    /// <summary>
 		/// Channel constructor.
 		/// </summary>
 		/// <param name="serializer">Serializer used to serialize message before send and deserialize it after receive.</param>
@@ -27,7 +27,7 @@ namespace RemoteExecution.Channels
         /// Method that should be called by implementation when message is received.
         /// </summary>
         /// <param name="message"></param>
-        protected void OnReceive(IMessage message)
+        public virtual void OnReceive(IMessage message)
 		{
 			if (Received != null)
 				Received(message);

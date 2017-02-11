@@ -37,20 +37,20 @@ namespace RemoteExecution.Channels
 		/// </summary>
 		public int ReceiverCount { get { return _netServer.ConnectionsCount; } }
 
-		#endregion
+        #endregion
 
-		/// <summary>
-		/// This implementation does nothing.
-		/// </summary>
-		protected override void Close()
+        /// <summary>
+        /// This implementation does nothing.
+        /// </summary>
+        public override void Close()
 		{
 		}
 
-		/// <summary>
-		/// Sends data through channel.
-		/// </summary>
-		/// <param name="data">Data to send.</param>
-		protected override void SendData(byte[] data)
+        /// <summary>
+        /// Sends data through channel.
+        /// </summary>
+        /// <param name="data">Data to send.</param>
+        public override void SendData(byte[] data)
 		{
 			if (!IsOpen)
 				throw new NotConnectedException("Connection is not opened.");

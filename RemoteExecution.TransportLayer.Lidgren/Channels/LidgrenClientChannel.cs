@@ -12,23 +12,50 @@ namespace RemoteExecution.Channels
 	/// and can be reopened after it has been closed.
 	/// </summary>
 	public class LidgrenClientChannel : LidgrenDuplexChannel, IClientChannel
-	{
-        /// <summary>
-        /// Active Lidgren client
-        /// </summary>
-		protected readonly NetClient Client;
-        /// <summary>
-        /// Host address of connection
-        /// </summary>
-		protected string Host;
-		private readonly MessageRouter _messageRouter;
-        /// <summary>
-        /// Host port of connection
-        /// </summary>
-		protected ushort Port;
-		private MessageLoop _messageLoop;
+    {
+        private NetPeer _client;
+        private MessageRouter _messageRouter;
+        private MessageLoop _messageLoop;
+        private string _host;
+        private ushort _port;
 
         /// <summary>
+        /// Lidgren net client.
+        /// </summary>
+        public virtual NetPeer Client
+        {
+            get { return _client; }
+            set { _client = value; }
+        }
+
+        /// <summary>
+        /// Host address of connection.
+        /// </summary>
+        public virtual string Host
+        {
+            get { return _host; }
+            set { _host = value; }
+        }
+
+        /// <summary>
+        /// Message router.
+        /// </summary>
+        public virtual MessageRouter MessageRouter => _messageRouter;
+        /// <summary>
+        /// Host port.
+        /// </summary>
+        public virtual ushort Port
+        {
+            get { return _port; }
+            set { _port = value; }
+        }
+
+        /// <summary>
+        /// Message loop.
+        /// </summary>
+        public virtual MessageLoop MessageLoop => _messageLoop;
+
+	    /// <summary>
         /// Creates client channel instance.
         /// </summary>
         /// <param name="applicationId">Application id that has to match to one used by <see cref="LidgrenServerConnectionListener"/>.</param>
@@ -39,26 +66,26 @@ namespace RemoteExecution.Channels
         public LidgrenClientChannel(string applicationId, string host, ushort port, IMessageSerializer serializer, ILidgrenCryptoProviderResolver cryptoProviderResolver)
 			: base(serializer, cryptoProviderResolver)
 		{
-			Host = host;
-			Port = port;
-			Client = new NetClient(new NetPeerConfiguration(applicationId));
+			_host = host;
+			_port = port;
+			_client = new NetClient(new NetPeerConfiguration(applicationId));
             _messageRouter = new MessageRouter();
 			_messageRouter.DataReceived += HandleIncomingMessage;
 			_messageRouter.ConnectionClosed += c => OnConnectionClose();
-		}
+        }
 
-		#region IClientChannel Members
+        #region IClientChannel Members
 
-		/// <summary>
-		/// Opens channel for sending and receiving messages.
-		/// If channel has been closed, this method reopens it.
-		/// </summary>
-		[MethodImpl(MethodImplOptions.Synchronized)]
-		public void Open()
+        /// <summary>
+        /// Opens channel for sending and receiving messages.
+        /// If channel has been closed, this method reopens it.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.Synchronized)]
+		public virtual void Open()
 		{
 			if (IsOpen)
 				throw new InvalidOperationException("Channel already opened.");
-			_messageLoop = new MessageLoop(Client, _messageRouter.Route);
+			_messageLoop = new MessageLoop(Client, MessageRouter.Route);
 			Client.Start();
 			Connection = Client.Connect(Host, Port);
 			Connection.WaitForConnectionToOpen();
@@ -70,14 +97,17 @@ namespace RemoteExecution.Channels
 		/// Closes channel. 
 		/// It should not throw if channel is already closed.
 		/// </summary>
-		protected override void Close()
+		public override void Close()
 		{
 			base.Close();
-			Client.Shutdown("Client disposed");
-			Client.WaitForClose();
+		    if (Client.Status == NetPeerStatus.Running || Client.Status == NetPeerStatus.Starting)
+		    {
+		        Client.Shutdown("Client disposed");
+		        Client.WaitForClose();
+		    }
 
-			if (_messageLoop != null)
-				_messageLoop.Dispose();
+		    if (MessageLoop != null)
+				MessageLoop.Dispose();
 			_messageLoop = null;
 		}
 	}

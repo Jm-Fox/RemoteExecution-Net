@@ -34,13 +34,13 @@ namespace RemoteExecution.Core.UT.Channels
 			base.OnReceive(DeserializeMessage(data));
 		}
 
-		protected override void Close()
+		public override void Close()
 		{
 			_isOpen = false;
 			FireChannelClosed();
 		}
 
-		protected override void SendData(byte[] data)
+        public override void SendData(byte[] data)
 		{
 			SentData = data;
 		}

@@ -49,6 +49,37 @@ namespace RemoteExecution.Connections
 			: base(connectionUri, dispatcher, config)
 		{
 		}
+        /// <summary>
+        /// Creates client connection instance with channel constructed from connectionUri, given operation dispatcher and default connection configuration (<see cref="DefaultConfig"/>).
+        /// </summary>
+        /// <param name="clientId">Identifier used to share client channels.</param>
+        /// <param name="connectionUri">Connection uri used to create channel.</param>
+        /// <param name="dispatcher">Operation dispatcher used to handle incoming operation requests from remote end.</param>
+        public ClientConnection(string connectionUri, string clientId, IOperationDispatcher dispatcher)
+			: base(clientId, connectionUri, dispatcher, new ConnectionConfig())
+		{
+		}
+        /// <summary>
+        /// Creates client connection instance with channel constructed from connectionUri, given connection configuration and default operation dispatcher.
+        /// </summary>
+        /// <param name="clientId">Identifier used to share client channels.</param>
+        /// <param name="connectionUri">Connection uri used to create channel.</param>
+        /// <param name="config">Connection configuration.</param>
+        public ClientConnection(string connectionUri, string clientId, IConnectionConfig config)
+			: base(clientId, connectionUri, new OperationDispatcher(), config)
+		{
+		}
+        /// <summary>
+        /// Creates client connection instance with channel constructed from connectionUri, given connection configuration and operation dispatcher.
+        /// </summary>
+        /// <param name="clientId">Identifier used to share client channels.</param>
+        /// <param name="connectionUri">Connection uri used to create channel.</param>
+        /// <param name="dispatcher">Operation dispatcher used to handle incoming operation requests from remote end.</param>
+        /// <param name="config">Connection configuration.</param>
+        public ClientConnection(string connectionUri, string clientId, IOperationDispatcher dispatcher, IConnectionConfig config)
+			: base(clientId, connectionUri, dispatcher, config)
+		{
+		}
 		/// <summary>
 		/// Creates client connection instance with given channel, connection configuration and operation dispatcher.
 		/// </summary>

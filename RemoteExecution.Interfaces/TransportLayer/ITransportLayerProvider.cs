@@ -21,12 +21,21 @@ namespace RemoteExecution.TransportLayer
 		/// <exception cref="ArgumentException">Thrown when uri has wrong scheme or contains wrong content.</exception>
 		IClientChannel CreateClientChannelFor(Uri uri);
 
-		/// <summary>
-		/// Creates server connection listener for given uri.
-		/// </summary>
-		/// <param name="uri">Uri used to configure server connection listener.</param>
-		/// <returns>Server connection listener</returns>
-		/// <exception cref="ArgumentException">Thrown when uri has wrong scheme or contains wrong content.</exception>
-		IServerConnectionListener CreateConnectionListenerFor(Uri uri);
+        /// <summary>
+        /// Creates client channel for given uri.
+        /// </summary>
+        /// <param name="clientId">If not unique, clientId allows ClientConnections to share networking infrastructure</param>
+        /// <param name="uri">Uri used to configure client channel.</param>
+        /// <returns>Client channel.</returns>
+        /// <exception cref="ArgumentException">Thrown when uri has wrong scheme or contains wrong content.</exception>
+        IClientChannel CreateClientChannelFor(string clientId, Uri uri);
+
+        /// <summary>
+        /// Creates server connection listener for given uri.
+        /// </summary>
+        /// <param name="uri">Uri used to configure server connection listener.</param>
+        /// <returns>Server connection listener</returns>
+        /// <exception cref="ArgumentException">Thrown when uri has wrong scheme or contains wrong content.</exception>
+        IServerConnectionListener CreateConnectionListenerFor(Uri uri);
 	}
 }
