@@ -22,8 +22,9 @@ namespace RemoteExecution
         {
             return type.GetMethods()
                 .Single(m => m.Name == method)
-                .GetCustomAttributes(typeof(RequiresIpEndPointAttribute), true)
-                .Any();
+                .CustomAttributes
+                .Any(a => a.AttributeType.AssemblyQualifiedName == typeof(RequiresIpEndPointAttribute).AssemblyQualifiedName);
+            // For whatever reason (a => a is RequiresIpEndPointAttribute), and its variants, are always false, despite the types appearing identical.
         }
     }
 }

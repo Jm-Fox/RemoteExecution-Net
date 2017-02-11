@@ -10,7 +10,7 @@ namespace RemoteExecution.Dispatchers.Messages
 		/// <summary>
 		/// Returns method arguments.
 		/// </summary>
-		object[] Args { get; }
+		object[] Args { get; set; }
 		/// <summary>
 		/// Returns channel where response should be sent to.
 		/// </summary>

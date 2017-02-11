@@ -90,6 +90,7 @@ namespace RemoteExecution.Channels
                 object[] args2 = new object[request.Args.Length + 1];
                 request.Args.CopyTo(args2, 0);
 		        args2[args2.Length - 1] = message.SenderEndPoint;
+		        request.Args = args2;
 		    }
 		    OnReceive(imessage);
 		}
