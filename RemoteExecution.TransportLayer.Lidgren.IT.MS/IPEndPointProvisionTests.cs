@@ -7,10 +7,12 @@ using RemoteExecution.Connections;
 using RemoteExecution.Dispatchers;
 using RemoteExecution.Endpoints;
 using RemoteExecution.Endpoints.Listeners;
+using RemoteExecution.InterfaceResolution;
 using RemoteExecution.Serializers;
 
 namespace RemoteExecution.TransportLayer.Lidgren.IT.MS
 {
+    // todo: move to RemoteExecution.Core.IT.MS
     [TestClass]
     public class IpEndPointProvisionTests
     {
@@ -31,7 +33,7 @@ namespace RemoteExecution.TransportLayer.Lidgren.IT.MS
         public static void ClassInitialize(TestContext context)
         {
             Configurator.Configure();
-            InterfaceResolver.Singleton.RegisterInterface(typeof(Server.IEndPointProvisioner));
+            InterfaceResolver.Singleton.RegisterInterface(typeof(IEndPointProvisioner));
         }
 
         [TestMethod]
@@ -41,7 +43,7 @@ namespace RemoteExecution.TransportLayer.Lidgren.IT.MS
             dispatcher = new OperationDispatcher();
             IPEndPoint senderEndPoint = null;
             IPEndPoint clientEndPoint = null;
-            dispatcher.RegisterHandler<Server.IEndPointProvisioner>(new Server.EndPointProvisioner { OnStuff = e => senderEndPoint = e });
+            dispatcher.RegisterHandler<IEndPointProvisioner>(new EndPointProvisioner { OnStuff = e => senderEndPoint = e });
                server = new GenericServerEndpoint(connectionListener, new ServerConfig(), () => dispatcher);
             server.Start();
 
@@ -49,7 +51,7 @@ namespace RemoteExecution.TransportLayer.Lidgren.IT.MS
             {
                 client.Open();
                 clientEndPoint = client.GetClientEndpoint();
-                client.RemoteExecutor.Create<Client.IEndPointProvisioner>().DoStuff();
+                client.RemoteExecutor.Create<IEndPointProvisioner>().DoStuff(null);
             }
             server.Dispose();
             Assert.AreEqual(clientEndPoint, senderEndPoint);

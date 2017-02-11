@@ -2,6 +2,7 @@ using System.Reflection;
 using ObjectSerialization;
 using ObjectSerialization.Types;
 using RemoteExecution.Dispatchers.Messages;
+using RemoteExecution.InterfaceResolution;
 using RemoteExecution.TransportLayer;
 
 namespace RemoteExecution.Serializers
@@ -37,7 +38,15 @@ namespace RemoteExecution.Serializers
 		/// <returns>Serialized message.</returns>
 		public byte[] Serialize(IMessage msg)
 		{
-			return _serializer.Serialize(msg);
+            IRequestMessage request = msg as IRequestMessage;
+		    if (request != null && InterfaceResolver.SenderEndPointIsExpectedByInterface(request))
+		    {
+                object[] args2 = new object[request.Args.Length - 1];
+		        for (int i = 0; i < args2.Length; i++)
+		            args2[i] = request.Args[i];
+		        request.Args = args2;
+		    }
+		    return _serializer.Serialize(msg);
 		}
 
 		#endregion

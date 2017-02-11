@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>RemoteExecution</RootNamespace>
     <AssemblyName>RemoteExecution.Core</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -22,6 +23,7 @@
     <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <DocumentationFile>bin\Debug\RemoteExecution.Core.XML</DocumentationFile>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -32,6 +34,7 @@
     <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <DocumentationFile>bin\Release\RemoteExecution.Core.XML</DocumentationFile>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Common.Logging, Version=1.2.0.0, Culture=neutral, PublicKeyToken=af08829b84f0328e">
@@ -50,6 +53,7 @@
     <Compile Include="..\AssemblyVersion.cs">
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
+    <Compile Include="InterfaceResolution\BasicInterfaceResolver.cs" />
     <Compile Include="Channels\DuplexChannel.cs" />
     <Compile Include="Channels\OutputChannel.cs" />
     <Compile Include="Config\ConnectionConfig.cs" />
@@ -57,8 +61,10 @@
     <Compile Include="Dispatchers\Messages\DefaultMessageFactory.cs" />
     <Compile Include="Endpoints\StatefulServerEndpoint.cs" />
     <Compile Include="Endpoints\StatelessServerEndpoint.cs" />
+    <Compile Include="InterfaceResolution\InterfaceResolver.cs" />
     <Compile Include="Remoting\OneWayAttribute.cs" />
     <Compile Include="Remoting\TwoWayAttribute.cs" />
+    <Compile Include="InterfaceResolution\RequiresIPEndPointAttribute.cs" />
     <Compile Include="TransportLayer\TransportLayerResolver.cs" />
     <Compile Include="Connections\ClientConnection.cs" />
     <Compile Include="Connections\RemoteConnection.cs" />

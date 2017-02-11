@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Linq;
+using System.Net;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RemoteExecution.Dispatchers.Messages;
+using RemoteExecution.InterfaceResolution;
 
 namespace RemoteExecution.Protobuf.UT.MS
 {
@@ -9,6 +12,12 @@ namespace RemoteExecution.Protobuf.UT.MS
     {
         private readonly ProtobufMessageFactory factory = new ProtobufMessageFactory();
         private readonly ProtobufSerializer serializer = new ProtobufSerializer();
+
+        [ClassInitialize]
+        public static void ClassInitialize(TestContext context)
+        {
+            InterfaceResolver.Singleton.RegisterInterface(typeof(ICalculator));
+        }
 
         [TestMethod]
         public void ValidateRequestSerialization()
@@ -57,6 +66,23 @@ namespace RemoteExecution.Protobuf.UT.MS
             Assert.AreEqual(sent.CorrelationId, received.CorrelationId);
             Assert.AreEqual(sent.Message, received.Message);
             Assert.AreEqual(sent.ExceptionType, received.ExceptionType);
+        }
+
+        [TestMethod]
+        public void ValidateIpEndPointIsDropped()
+        {
+            // Arrange
+            IPEndPoint any = new IPEndPoint(IPAddress.Any, 0);
+            IRequestMessage sent = factory.CreateRequestMessage("cat", "ICalculator", "Divide", new object[] { 5, 6, null }, true);
+
+            // Act
+            IRequestMessage received = (IRequestMessage)serializer.Deserialize(serializer.Serialize(sent));
+            received.Args = new object[] {any};
+            (received as IIncomplete).Complete(typeof(ICalculator).GetMethod(nameof(ICalculator.Add)));
+
+            // Assert
+            Assert.AreEqual(sent.CorrelationId, received.CorrelationId);
+            Assert.AreEqual(any, received.Args.Last());
         }
     }
 }

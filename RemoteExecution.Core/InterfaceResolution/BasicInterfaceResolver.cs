@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace RemoteExecution
+namespace RemoteExecution.InterfaceResolution
 {
     /// <summary>
     /// Basic implementation of InterfaceResolver.

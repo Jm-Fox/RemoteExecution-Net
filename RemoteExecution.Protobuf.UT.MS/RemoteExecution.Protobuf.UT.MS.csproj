@@ -56,6 +56,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\RemoteExecution.Core\RemoteExecution.Core.csproj">
+      <Project>{1F49092C-ADF4-4F6E-B383-2AE4CC3EF10B}</Project>
+      <Name>RemoteExecution.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\RemoteExecution.Interfaces\RemoteExecution.Interfaces.csproj">
       <Project>{ddb0303b-c762-445d-9cb1-a7d03239b660}</Project>
       <Name>RemoteExecution.Interfaces</Name>

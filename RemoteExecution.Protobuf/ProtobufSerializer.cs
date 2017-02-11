@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using ProtoBuf;
 using RemoteExecution.Dispatchers.Messages;
+using RemoteExecution.InterfaceResolution;
 using RemoteExecution.Serializers;
 
 namespace RemoteExecution
@@ -58,8 +59,12 @@ namespace RemoteExecution
             {
                 case nameof(ProtobufRequestMessage):
                     ProtobufRequestMessage protobufRequest = (ProtobufRequestMessage)msg;
-                    foreach (object obj in protobufRequest.Args)
+                    bool dropIp = InterfaceResolver.SenderEndPointIsExpectedByInterface(protobufRequest);
+                    for (int index = 0; index < protobufRequest.Args.Length && (!dropIp | index < protobufRequest.Args.Length - 1); index++)
+                    {
+                        object obj = protobufRequest.Args[index];
                         Serializer.SerializeWithLengthPrefix(parameterStream, obj, PrefixStyle.Fixed32);
+                    }
                     protobufRequest.SerializableArgs = parameterStream.ToArray();
                     Serializer.Serialize(primaryStream, msg);
                     break;

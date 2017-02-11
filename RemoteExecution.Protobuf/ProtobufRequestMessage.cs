@@ -42,9 +42,12 @@ namespace RemoteExecution
         public void Complete(MethodInfo info)
         {
             ParameterInfo[] infos = info.GetParameters();
-            Args = new object[infos.Length];
+            object ip = Args?[0];
+            Args = new object[ip == null ? infos.Length : infos.Length + 1];
+            if (ip != null)
+                Args[Args.Length - 1] = ip;
             using (MemoryStream stream = new MemoryStream(SerializableArgs))
-                for (int i = 0; i < Args.Length; i++) {
+                for (int i = 0; i < infos.Length; i++) {
                     Args[i] = Model.DeserializeWithLengthPrefix(stream, null,
                         (Type)MapType.Invoke(Model, new object[] { infos[i].ParameterType }), PrefixStyle.Fixed32, 0);
                 }

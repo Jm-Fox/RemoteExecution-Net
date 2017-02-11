@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using Lidgren.Network;
 using RemoteExecution.Dispatchers.Messages;
+using RemoteExecution.InterfaceResolution;
 using RemoteExecution.Serializers;
 
 namespace RemoteExecution.Channels
@@ -54,17 +55,6 @@ namespace RemoteExecution.Channels
         }
 
         /// <summary>
-        /// Determines whether or not the channel should inject the IPAddress into the method arguments.
-        /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
-        public static bool SenderEndPointIsExpectedByInterface(IRequestMessage request)
-        {
-            return RequiresIpEndPointAttribute.RequiresIpEndPoint(
-                InterfaceResolver.Singleton.GetInterface(request.MessageType), request.MethodName);
-        }
-
-        /// <summary>
         /// Handles incoming message in lidgren format.
         /// </summary>
         /// <param name="message">Message to handle.</param>
@@ -85,7 +75,7 @@ namespace RemoteExecution.Channels
 		        return;
 		    }
 		    IRequestMessage request = imessage as IRequestMessage;
-		    if (request != null && SenderEndPointIsExpectedByInterface(request)) {
+		    if (request != null && InterfaceResolver.SenderEndPointIsExpectedByInterface(request)) {
                 // Modified such that interface method names that end in _ will provide the Client's IP
                 object[] args2 = new object[request.Args.Length + 1];
                 request.Args.CopyTo(args2, 0);

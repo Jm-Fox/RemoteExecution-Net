@@ -52,9 +52,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ClientConnectionExtensions.cs" />
-    <Compile Include="Client\IEndPointProvisioner.cs" />
     <Compile Include="ICalculator.cs" />
-    <Compile Include="Server\IEndPointProvisioner.cs" />
+    <Compile Include="IEndPointProvisioner.cs" />
     <Compile Include="IGreeter.cs" />
     <Compile Include="CryptoTests.cs" />
     <Compile Include="IPEndPointProvisionTests.cs" />

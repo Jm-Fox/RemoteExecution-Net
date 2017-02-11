@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>RemoteExecution</RootNamespace>
     <AssemblyName>RemoteExecution.Protobuf</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -23,6 +23,7 @@
     <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <DocumentationFile>bin\Debug\RemoteExecution.Protobuf.XML</DocumentationFile>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -31,6 +32,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="protobuf-net, Version=2.1.0.0, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
@@ -49,6 +51,10 @@
     <Compile Include="ProtobufSerializer.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\RemoteExecution.Core\RemoteExecution.Core.csproj">
+      <Project>{1F49092C-ADF4-4F6E-B383-2AE4CC3EF10B}</Project>
+      <Name>RemoteExecution.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\RemoteExecution.Interfaces\RemoteExecution.Interfaces.csproj">
       <Project>{ddb0303b-c762-445d-9cb1-a7d03239b660}</Project>
       <Name>RemoteExecution.Interfaces</Name>
