@@ -1,3 +1,7 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using System.Threading;
 using AopAlliance.Intercept;
 using RemoteExecution.Channels;
@@ -12,19 +16,29 @@ namespace RemoteExecution.Remoting
 	internal class TwoWayRemoteCallInterceptor : IMethodInterceptor
 	{
 		private readonly IOutputChannel _channel;
-		private readonly string _interfaceName;
+		private readonly Type _interfaceType;
 		private readonly IMessageDispatcher _messageDispatcher;
 	    private readonly IMessageFactory _messageFactory;
 
 	    private readonly IDurableConnection _durableConnection;
+        private readonly Dictionary<MethodInfo, TimeSpan> _methodTimeouts = new Dictionary<MethodInfo, TimeSpan>();
         RemoteCancellationTokenSource _tokenSource;
 
-        public TwoWayRemoteCallInterceptor(IOutputChannel channel, IMessageDispatcher messageDispatcher, IMessageFactory messageFactory, string interfaceName)
+        public TwoWayRemoteCallInterceptor(IOutputChannel channel, IMessageDispatcher messageDispatcher, IMessageFactory messageFactory, Type interfaceType)
 		{
 			_channel = channel;
             _durableConnection = _channel as IDurableConnection;
 			_messageDispatcher = messageDispatcher;
-			_interfaceName = interfaceName;
+            _interfaceType = interfaceType;
+		    TimeSpan defaultTimeout =
+		        (interfaceType.GetCustomAttributes(typeof(TimeoutAttribute), true).FirstOrDefault() as TimeoutAttribute)?
+		        .Timeout ?? DefaultConfig.DefaultTimeout;
+		    foreach (MethodInfo info in interfaceType.GetMethods())
+		    {
+		        TimeSpan? newTimeout =
+		            (info.GetCustomAttributes(typeof(TimeoutAttribute), true).FirstOrDefault() as TimeoutAttribute)?.Timeout;
+		        _methodTimeouts[info] = newTimeout ?? defaultTimeout;
+		    }
 		    _messageFactory = messageFactory;
 		    GenerateNewCancellationToken();
             if (_durableConnection != null)
@@ -51,7 +65,7 @@ namespace RemoteExecution.Remoting
 
 		public object Invoke(IMethodInvocation invocation)
 		{
-			var handler = CreateResponseHandler();
+		    var handler = CreateResponseHandler();
 
 			_messageDispatcher.Register(handler);
 			try
@@ -59,14 +73,14 @@ namespace RemoteExecution.Remoting
 			    if (_durableConnection == null)
                 {
                     SendMessage(invocation, handler);
-                    handler.WaitForResponse(DefaultConfig.DefaultTimeout, CancellationToken.None);
+                    handler.WaitForResponse(_methodTimeouts[invocation.Method], CancellationToken.None);
 			    }
 			    else
 			    {
 			        do
                     {
                         SendMessage(invocation, handler);
-                        WaitForHandler(handler);
+                        WaitForHandler(handler, _methodTimeouts[invocation.Method]);
                     } while (!handler.HasValue);
 			    }
 			}
@@ -81,14 +95,14 @@ namespace RemoteExecution.Remoting
 
 	    private void SendMessage(IMethodInvocation invocation, IResponseHandler handler)
 	    {
-	        _channel.Send(_messageFactory.CreateRequestMessage(handler.HandledMessageType, _interfaceName,
+	        _channel.Send(_messageFactory.CreateRequestMessage(handler.HandledMessageType, _interfaceType.Name,
 	            invocation.Method.Name, invocation.Arguments, true));
 	    }
 
-	    private void WaitForHandler(IResponseHandler handler)
+	    private void WaitForHandler(IResponseHandler handler, TimeSpan timeout)
 	    {
 	        var tokenSource = _tokenSource;
-	        handler.WaitForResponse(DefaultConfig.DefaultTimeout, tokenSource.Token);
+	        handler.WaitForResponse(timeout, tokenSource.Token);
             if (tokenSource.IsCancellationRequested)
             {
                 if (tokenSource.Aborted)
