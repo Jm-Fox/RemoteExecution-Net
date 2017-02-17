@@ -39,10 +39,10 @@ namespace RemoteExecution.Config
         public IMessageFactory MessageFactory { get; set; }
 
         /// <summary>
-        /// Returns the message serializer that should be used
+        /// Returns the message serializer that should be used.
         /// </summary>
         public IMessageSerializer MessageSerializer { get; set; }
 
         #endregion
-    }
+        }
 }

@@ -1,5 +1,4 @@
-﻿using System;
-using RemoteExecution;
+﻿using RemoteExecution;
 using RemoteExecution.Config;
 using RemoteExecution.Dispatchers.Messages;
 using RemoteExecution.Executors;
@@ -8,9 +7,9 @@ using RemoteExecution.Schedulers;
 using RemoteExecution.Serializers;
 using RemoteExecution.TransportLayer;
 
-namespace DurableServices.Contracts
+namespace SharedClientServices.Contracts
 {
-    public static class DurableConfigurator
+    public static class SharedConfigurator
     {
         /// <summary>
         /// Configures remote execution framework.
@@ -18,13 +17,12 @@ namespace DurableServices.Contracts
         /// </summary>
         public static void Configure()
         {
-            DefaultConfig.DefaultTimeout = new TimeSpan(0, 0, 15);
-            DefaultConfig.MessageSerializer = new ProtobufSerializer();
-            DefaultConfig.MessageFactory = new ProtobufMessageFactory();
+            DefaultConfig.MessageSerializer = new BinaryMessageSerializer();
+            DefaultConfig.MessageFactory = new DefaultMessageFactory();
             DefaultConfig.RemoteExecutorFactory = new RemoteExecutorFactory();
             DefaultConfig.TaskScheduler = new AsyncTaskScheduler();
-            TransportLayerResolver.Register(new DurableLidgrenProvider());
-            InterfaceResolver.Singleton.RegisterInterface<ICalculator>();
+            TransportLayerResolver.Register(new SharedLidgrenProvider());
+            InterfaceResolver.Singleton.RegisterInterface(typeof(IBasicService));
         }
     }
 }

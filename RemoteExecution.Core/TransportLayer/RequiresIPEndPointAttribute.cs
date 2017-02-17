@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace RemoteExecution.InterfaceResolution
+namespace RemoteExecution.TransportLayer
 {
     /// <summary>
     /// Indicates that an contract method requires an IpEndPoint (client and server interfaces differ).

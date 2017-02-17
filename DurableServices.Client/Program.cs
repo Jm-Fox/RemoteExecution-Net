@@ -11,6 +11,9 @@ namespace DurableServices.Client
         static void Main(string[] args)
         {
             DurableConfigurator.Configure();
+            // Note that using the type DurableClientConnection here is not absolutely necessary.
+            // Because the transport layer provider will always provide DurableLidgrenClientChannels, the channels themselves will be durable,
+            // but accessing the Durable events is a pain.
             using (var client = new DurableClientConnection("net://localhost:3133/DurableServices"))
             {
                 bool stop = false;

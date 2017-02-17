@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using RemoteExecution.Dispatchers.Messages;
+using RemoteExecution.TransportLayer;
 
 namespace RemoteExecution.InterfaceResolution
 {
@@ -27,6 +28,16 @@ namespace RemoteExecution.InterfaceResolution
         /// <param name="interfaceType"></param>
         /// <returns>True if successfully added, false if ignored because the interface name already is registered.</returns>
         public abstract bool RegisterInterface(Type interfaceType);
+
+        /// <summary>
+        /// Registers a name mapping to the type of the interface.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns>True if successfully added, false if ignored because the interface name already is registered.</returns>
+        public bool RegisterInterface<T>()
+        {
+            return RegisterInterface(typeof(T));
+        }
 
         /// <summary>
         /// Determines whether or not an interface type's method requires an IpEndPoint

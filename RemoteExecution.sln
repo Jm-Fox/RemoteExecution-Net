@@ -88,7 +88,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RemoteExecution.TransportLa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RemoteExecution.TransportLayer.Lidgren.Wrappers", "RemoteExecution.TransportLayer.Lidgren.Wrappers\RemoteExecution.TransportLayer.Lidgren.Wrappers.csproj", "{93B0F412-526E-4473-A435-094D47C435C7}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "06 EncryptedServices", "06 EncryptedServices", "{AA7C5D1D-434D-476D-8D5B-24C703ACD7D4}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "06 EncryptedServices and IPEndPoint Provisioning", "06 EncryptedServices and IPEndPoint Provisioning", "{AA7C5D1D-434D-476D-8D5B-24C703ACD7D4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EncryptedServices.Contracts", "EncryptedServices.Contracts\EncryptedServices.Contracts.csproj", "{16FB27DF-6602-4D77-B162-AEAB5519391A}"
 EndProject
@@ -96,13 +96,23 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EncryptedServices.Server", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EncryptedServices.Client", "EncryptedServices.Client\EncryptedServices.Client.csproj", "{57BE4F4B-B44B-4BCF-AD22-6C004E2FEE81}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "07 DurableServices", "07 DurableServices", "{2EAC93E6-4670-4F99-A96D-A2EBD0C669DA}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "07 DurableServices and Protobufs", "07 DurableServices and Protobufs", "{2EAC93E6-4670-4F99-A96D-A2EBD0C669DA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DurableServices.Client", "DurableServices.Client\DurableServices.Client.csproj", "{99F42C1E-9A0B-4C88-9532-3AC8DD3BB58C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DurableServices.Server", "DurableServices.Server\DurableServices.Server.csproj", "{DD53A5A2-A61C-4001-B66C-D2BB24789531}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DurableServices.Contracts", "DurableServices.Contracts\DurableServices.Contracts.csproj", "{726300A3-ED66-461A-B1DD-B3A37F13932D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "08 SharedClientServices and IPEndPoint Provisioning", "08 SharedClientServices and IPEndPoint Provisioning", "{F27CDD92-F6D7-4EA7-A1AA-4029F1416AE8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedClientServices.Contracts", "SharedClientServices.Contracts\SharedClientServices.Contracts.csproj", "{A52BA9A9-A3D0-47FB-AD84-DB76CA25BB38}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedClientServices.Client", "SharedClientServices.Client\SharedClientServices.Client.csproj", "{A1CB9A6E-173B-4392-BCEE-A08FA886711B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedClientServices.Server1", "SharedClientServices.Server1\SharedClientServices.Server1.csproj", "{46223268-068D-4CF7-8A5D-61F071BD1CC9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedClientServices.Server2", "SharedClientServices.Server2\SharedClientServices.Server2.csproj", "{99F55495-0683-465F-960B-6507AD451323}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -258,6 +268,22 @@ Global
 		{726300A3-ED66-461A-B1DD-B3A37F13932D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{726300A3-ED66-461A-B1DD-B3A37F13932D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{726300A3-ED66-461A-B1DD-B3A37F13932D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A52BA9A9-A3D0-47FB-AD84-DB76CA25BB38}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A52BA9A9-A3D0-47FB-AD84-DB76CA25BB38}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A52BA9A9-A3D0-47FB-AD84-DB76CA25BB38}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A52BA9A9-A3D0-47FB-AD84-DB76CA25BB38}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A1CB9A6E-173B-4392-BCEE-A08FA886711B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1CB9A6E-173B-4392-BCEE-A08FA886711B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1CB9A6E-173B-4392-BCEE-A08FA886711B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1CB9A6E-173B-4392-BCEE-A08FA886711B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{46223268-068D-4CF7-8A5D-61F071BD1CC9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{46223268-068D-4CF7-8A5D-61F071BD1CC9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{46223268-068D-4CF7-8A5D-61F071BD1CC9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{46223268-068D-4CF7-8A5D-61F071BD1CC9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{99F55495-0683-465F-960B-6507AD451323}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{99F55495-0683-465F-960B-6507AD451323}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{99F55495-0683-465F-960B-6507AD451323}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{99F55495-0683-465F-960B-6507AD451323}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -299,5 +325,10 @@ Global
 		{99F42C1E-9A0B-4C88-9532-3AC8DD3BB58C} = {2EAC93E6-4670-4F99-A96D-A2EBD0C669DA}
 		{DD53A5A2-A61C-4001-B66C-D2BB24789531} = {2EAC93E6-4670-4F99-A96D-A2EBD0C669DA}
 		{726300A3-ED66-461A-B1DD-B3A37F13932D} = {2EAC93E6-4670-4F99-A96D-A2EBD0C669DA}
+		{F27CDD92-F6D7-4EA7-A1AA-4029F1416AE8} = {AD31D178-0712-404A-A602-872E93980001}
+		{A52BA9A9-A3D0-47FB-AD84-DB76CA25BB38} = {F27CDD92-F6D7-4EA7-A1AA-4029F1416AE8}
+		{A1CB9A6E-173B-4392-BCEE-A08FA886711B} = {F27CDD92-F6D7-4EA7-A1AA-4029F1416AE8}
+		{46223268-068D-4CF7-8A5D-61F071BD1CC9} = {F27CDD92-F6D7-4EA7-A1AA-4029F1416AE8}
+		{99F55495-0683-465F-960B-6507AD451323} = {F27CDD92-F6D7-4EA7-A1AA-4029F1416AE8}
 	EndGlobalSection
 EndGlobal

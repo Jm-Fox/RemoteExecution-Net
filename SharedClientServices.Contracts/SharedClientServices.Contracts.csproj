@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{726300A3-ED66-461A-B1DD-B3A37F13932D}</ProjectGuid>
+    <ProjectGuid>{A52BA9A9-A3D0-47FB-AD84-DB76CA25BB38}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DurableServices.Contracts</RootNamespace>
-    <AssemblyName>DurableServices.Contracts</AssemblyName>
+    <RootNamespace>SharedClientServices.Contracts</RootNamespace>
+    <AssemblyName>SharedClientServices.Contracts</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -35,21 +35,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DurableConfigurator.cs" />
-    <Compile Include="ICalculator.cs" />
+    <Compile Include="IBasicService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\RemoteExecution.Core\RemoteExecution.Core.csproj">
-      <Project>{1F49092C-ADF4-4F6E-B383-2AE4CC3EF10B}</Project>
+      <Project>{1f49092c-adf4-4f6e-b383-2ae4cc3ef10b}</Project>
       <Name>RemoteExecution.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\RemoteExecution.Interfaces\RemoteExecution.Interfaces.csproj">
       <Project>{DDB0303B-C762-445D-9CB1-A7D03239B660}</Project>
       <Name>RemoteExecution.Interfaces</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\RemoteExecution.Protobuf\RemoteExecution.Protobuf.csproj">
-      <Project>{6BACEE64-6561-4C41-8E79-B7D6321F48BA}</Project>
-      <Name>RemoteExecution.Protobuf</Name>
     </ProjectReference>
     <ProjectReference Include="..\RemoteExecution.Spring\RemoteExecution.Spring.csproj">
       <Project>{84FC2762-9BF2-44D6-8FD9-0B580EEFED25}</Project>

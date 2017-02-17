@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using RemoteExecution.InterfaceResolution;
 using RemoteExecution.Remoting;
+using RemoteExecution.TransportLayer;
 
 namespace EncryptedServices.Contracts
 {

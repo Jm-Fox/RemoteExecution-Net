@@ -4,15 +4,16 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{726300A3-ED66-461A-B1DD-B3A37F13932D}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DurableServices.Contracts</RootNamespace>
-    <AssemblyName>DurableServices.Contracts</AssemblyName>
+    <ProjectGuid>{A1CB9A6E-173B-4392-BCEE-A08FA886711B}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>SharedClientServices.Client</RootNamespace>
+    <AssemblyName>SharedClientServices.Client</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -22,6 +23,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -34,9 +36,11 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DurableConfigurator.cs" />
-    <Compile Include="ICalculator.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\RemoteExecution.Core\RemoteExecution.Core.csproj">
@@ -47,25 +51,9 @@
       <Project>{DDB0303B-C762-445D-9CB1-A7D03239B660}</Project>
       <Name>RemoteExecution.Interfaces</Name>
     </ProjectReference>
-    <ProjectReference Include="..\RemoteExecution.Protobuf\RemoteExecution.Protobuf.csproj">
-      <Project>{6BACEE64-6561-4C41-8E79-B7D6321F48BA}</Project>
-      <Name>RemoteExecution.Protobuf</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\RemoteExecution.Spring\RemoteExecution.Spring.csproj">
-      <Project>{84FC2762-9BF2-44D6-8FD9-0B580EEFED25}</Project>
-      <Name>RemoteExecution.Spring</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\RemoteExecution.TransportLayer.Lidgren.Wrappers\RemoteExecution.TransportLayer.Lidgren.Wrappers.csproj">
-      <Project>{93B0F412-526E-4473-A435-094D47C435C7}</Project>
-      <Name>RemoteExecution.TransportLayer.Lidgren.Wrappers</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\RemoteExecution.TransportLayer.Lidgren\RemoteExecution.TransportLayer.Lidgren.csproj">
-      <Project>{85D95624-EC1F-461C-B923-E824C6B56955}</Project>
-      <Name>RemoteExecution.TransportLayer.Lidgren</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\RemoteExecution\RemoteExecution.csproj">
-      <Project>{A46D4206-7D05-4BF6-A30D-4D49A925323D}</Project>
-      <Name>RemoteExecution</Name>
+    <ProjectReference Include="..\SharedClientServices.Contracts\SharedClientServices.Contracts.csproj">
+      <Project>{A52BA9A9-A3D0-47FB-AD84-DB76CA25BB38}</Project>
+      <Name>SharedClientServices.Contracts</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
