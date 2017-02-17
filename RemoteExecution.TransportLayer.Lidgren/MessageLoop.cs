@@ -6,7 +6,7 @@ using Lidgren.Network;
 namespace RemoteExecution
 {
     /// <summary>
-    /// todo: write summary
+    /// Provides a loop for reading messages from a NetPeer.
     /// </summary>
 	public class MessageLoop
 	{
@@ -16,7 +16,7 @@ namespace RemoteExecution
 		private readonly Thread _thread;
 
         /// <summary>
-        /// todo: write summary
+        /// Basic constructor.
         /// </summary>
         public MessageLoop(NetPeer peer, Action<NetIncomingMessage> handleMessage)
 		{
@@ -37,7 +37,7 @@ namespace RemoteExecution
 		}
 
         /// <summary>
-        /// todo: write summary
+        /// Disposes the message loop.
         /// </summary>
         public void Dispose()
 		{

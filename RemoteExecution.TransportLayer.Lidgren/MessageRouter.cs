@@ -4,25 +4,25 @@ using Lidgren.Network;
 namespace RemoteExecution
 {
     /// <summary>
-    /// todo: write summary
+    /// Routes Lidgren net*messages.
     /// </summary>
 	public class MessageRouter
     {
         /// <summary>
-        /// todo: write summary
+        /// Event fired when the net connection is closed.
         /// </summary>
         public event Action<NetConnection> ConnectionClosed;
         /// <summary>
-        /// todo: write summary
+        /// Event fired when the net connection is opened.
         /// </summary>
         public event Action<NetConnection> ConnectionOpened;
         /// <summary>
-        /// todo: write summary
+        /// Action taken when data is received.
         /// </summary>
         public event Action<NetIncomingMessage> DataReceived;
 
         /// <summary>
-        /// todo: write summary
+        /// Method to be called when a net incoming message is received and ready for routing.
         /// </summary>
         public void Route(NetIncomingMessage msg)
 		{
