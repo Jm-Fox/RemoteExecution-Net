@@ -31,10 +31,9 @@ namespace RemoteExecution.TransportLayer.Lidgren.Wrappers.IT.MS
 
         private static ClientConnection MakeFacadeConnection(string appId, string host, ushort port)
         {
-            return
-                new ClientConnection(new LidgrenClientChannelFacade(new LidgrenClientChannel(appId, host, port,
-                    new BinaryMessageSerializer(),
-                    new UnencryptedCryptoProviderResolver())), new OperationDispatcher(), new ConnectionConfig());
+            return new ClientConnection(new LidgrenClientChannelFacade(new LidgrenClientChannel(appId, host, port,
+                new BinaryMessageSerializer(),
+                new UnencryptedCryptoProviderResolver())), new OperationDispatcher(), new ConnectionConfig());
         }
 
         // todo: write more tests
