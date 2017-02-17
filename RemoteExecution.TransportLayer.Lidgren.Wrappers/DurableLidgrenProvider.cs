@@ -68,7 +68,7 @@ namespace RemoteExecution
         /// <exception cref="ArgumentException">Thrown when uri has wrong scheme or contains wrong content.</exception>
         public override IClientChannel CreateClientChannelFor(string clientId, Uri uri)
         {
-            throw new InvalidOperationException();
+            throw new NotSupportedException();
         }
     }
 }

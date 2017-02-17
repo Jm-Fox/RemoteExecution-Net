@@ -146,7 +146,7 @@ namespace RemoteExecution
         /// <exception cref="ArgumentException">Thrown when uri has wrong scheme or contains wrong content.</exception>
         public virtual IClientChannel CreateClientChannelFor(string clientId, Uri uri)
         {
-            throw new InvalidOperationException();
+            throw new NotSupportedException();
         }
 	}
 }
