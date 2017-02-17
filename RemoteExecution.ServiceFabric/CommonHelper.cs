@@ -17,7 +17,7 @@ namespace RemoteExecution.ServiceFabric
             if (host == "localhost")
                 host = Loopback;
             return
-                $"net://{host}{portstr}/{description.Name}";
+                $"net://{host}{portstr}/{description.PathSuffix}";
         }
         // todo: make these safe for arrays
 
