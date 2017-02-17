@@ -81,6 +81,12 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ServiceFabric.Contracts\ServiceFabric.Contracts.csproj">
+      <Project>{09370e56-3e6a-4eff-a9a6-7442c329d836}</Project>
+      <Name>ServiceFabric.Contracts</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
