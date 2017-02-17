@@ -1,3 +1,4 @@
+using System;
 using RemoteExecution.Dispatchers.Messages;
 using RemoteExecution.Executors;
 using RemoteExecution.Schedulers;
@@ -29,5 +30,10 @@ namespace RemoteExecution.Config
         /// Default message serializer.
         /// </summary>
         public static IMessageSerializer MessageSerializer { get; set; }
+
+        /// <summary>
+        /// Default two-way request timeout.
+        /// </summary>
+        public static TimeSpan DefaultTimeout { get; set; } = new TimeSpan(0, 1, 0);
     }
 }

@@ -77,8 +77,8 @@ namespace RemoteExecution.Channels
 		    IRequestMessage request = imessage as IRequestMessage;
 		    if (request != null && InterfaceResolver.SenderEndPointIsExpectedByInterface(request)) {
                 // Modified such that interface method names that end in _ will provide the Client's IP
-                object[] args2 = new object[request.Args.Length + 1];
-                request.Args.CopyTo(args2, 0);
+                object[] args2 = new object[request.Args?.Length + 1 ?? 1];
+                request.Args?.CopyTo(args2, 0);
 		        args2[args2.Length - 1] = message.SenderEndPoint;
 		        request.Args = args2;
 		    }

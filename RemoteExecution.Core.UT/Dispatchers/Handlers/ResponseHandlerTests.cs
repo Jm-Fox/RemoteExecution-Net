@@ -45,7 +45,7 @@ namespace RemoteExecution.Core.UT.Dispatchers.Handlers
 		[Test]
 		public void Should_wait_for_response_return_when_message_is_handled()
 		{
-			var waitingThread = new Thread(() => _subject.WaitForResponse());
+			var waitingThread = new Thread(() => _subject.WaitForResponse(TimeSpan.MaxValue, CancellationToken.None));
 			waitingThread.Start();
 
 			_subject.Handle(new ResponseMessage());

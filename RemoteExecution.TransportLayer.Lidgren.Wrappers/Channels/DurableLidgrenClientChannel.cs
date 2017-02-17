@@ -2,7 +2,7 @@
 using System.Collections.Concurrent;
 using System.Runtime.CompilerServices;
 using Lidgren.Network;
-using RemoteExecution.Dispatchers;
+using RemoteExecution.Connections;
 using RemoteExecution.Dispatchers.Messages;
 
 namespace RemoteExecution.Channels
@@ -12,7 +12,7 @@ namespace RemoteExecution.Channels
     /// it's possible that it will be restored within a few seconds. While this logic could easily be
     /// implemented elsewhere, it makes the most sense to have it here.
     /// </summary>
-    public class DurableLidgrenClientChannel : LidgrenClientChannelWrapper
+    public class DurableLidgrenClientChannel : LidgrenClientChannelWrapper, IDurableConnection
     {
         #region Durable fields and properties
 
@@ -31,11 +31,28 @@ namespace RemoteExecution.Channels
         /// </summary>
         private bool gracefulClosing = false;
 
+        private bool attemptingReconnection = false;
+
         /// <summary>
         /// [Singular] event fired when the connection is closed. The listener can suggest a new host and port where the service might be located.
         /// If not used, reconnection attempts will hit the same host and port.
         /// </summary>
-        public Action<ClosedConnectionResponse> HandleClosedConnectionResponse;
+        public Action<ClosedConnectionResponse> ConnectionPaused { get; set; }
+
+        /// <summary>
+        /// Event fired when connection is restored.
+        /// </summary>
+        public event Action ConnectionRestored;
+
+        /// <summary>
+        /// Event fired when connection is aborted.
+        /// </summary>
+        public event Action ConnectionAborted;
+
+        /// <summary>
+        /// Event fired when connection is down.
+        /// </summary>
+        public event Action ConnectionInterrupted;
 
         /// <summary>
         /// Bytes that are awaiting sending due to temporary shutdown of the connection
@@ -74,14 +91,16 @@ namespace RemoteExecution.Channels
         /// </summary>
         public override void OnConnectionClose()
         {
-            if (!gracefulClosing)
+            if (!gracefulClosing && !attemptingReconnection)
             {
+                ConnectionInterrupted?.Invoke();
+                attemptingReconnection = true;
                 ClosedConnectionResponse response  = new ClosedConnectionResponse
                 {
                     ReconnectHost = Host,
                     ReconnectPort = Port
                 };
-                HandleClosedConnectionResponse?.Invoke(response);
+                ConnectionPaused?.Invoke(response);
                 if (!response.Abort)
                 {
                     while (!gracefulClosing && failures < RetryAttempts)
@@ -91,6 +110,7 @@ namespace RemoteExecution.Channels
                         {
                             newConnection.WaitForConnectionToOpen();
                             RestoreConnection(newConnection, response);
+                            ConnectionRestored?.Invoke();
                             return;
                         }
                         catch (ConnectionOpenException)
@@ -99,6 +119,7 @@ namespace RemoteExecution.Channels
                         }
                     }
                 }
+                ConnectionAborted?.Invoke();
                 AbortConnection();
             }
         }
@@ -142,14 +163,8 @@ namespace RemoteExecution.Channels
         private void AbortConnection()
         {
             actuallyClosed = true;
+            attemptingReconnection = false;
             base.OnConnectionClose();
-            if (!gracefulClosing)
-            {
-                Dispose();
-                // Exception thrown to terminate message loop
-                throw new OperationAbortedException("Connection was lost and could not be restored.");
-            }
-            // Dispose must be called twice because it sets gracefulClosing to true.
             Dispose();
         }
 
@@ -157,6 +172,7 @@ namespace RemoteExecution.Channels
         private void RestoreConnection(NetConnection connection, ClosedConnectionResponse response)
         {
             Connection = connection;
+            attemptingReconnection = false;
             Host = response.ReconnectHost;
             Port = response.ReconnectPort;
             failures = 0;

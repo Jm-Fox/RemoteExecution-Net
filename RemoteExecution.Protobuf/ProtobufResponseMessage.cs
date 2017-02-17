@@ -29,8 +29,9 @@ namespace RemoteExecution
 
         public void Complete(MethodInfo info)
         {
-            using (MemoryStream stream = new MemoryStream(SerializableValue))
-                Value = Serializer.Deserialize(info.ReturnType, stream);
+            if (info.ReturnType != typeof(void))
+                using (MemoryStream stream = new MemoryStream(SerializableValue))
+                    Value = Serializer.Deserialize(info.ReturnType, stream);
         }
     }
 }

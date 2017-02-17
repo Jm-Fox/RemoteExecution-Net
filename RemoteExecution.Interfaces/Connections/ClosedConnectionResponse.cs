@@ -1,4 +1,4 @@
-﻿namespace RemoteExecution
+﻿namespace RemoteExecution.Connections
 {
     /// <summary>
     /// Plain-old-data for responding to a connection that closed unexpectedly.

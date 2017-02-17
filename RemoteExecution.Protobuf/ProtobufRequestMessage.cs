@@ -43,11 +43,12 @@ namespace RemoteExecution
         {
             ParameterInfo[] infos = info.GetParameters();
             object ip = Args?[0];
-            Args = new object[ip == null ? infos.Length : infos.Length + 1];
+            Args = new object[infos.Length];
             if (ip != null)
                 Args[Args.Length - 1] = ip;
+            int len = ip == null ? infos.Length : infos.Length - 1;
             using (MemoryStream stream = new MemoryStream(SerializableArgs))
-                for (int i = 0; i < infos.Length; i++) {
+                for (int i = 0; i < len; i++) {
                     Args[i] = Model.DeserializeWithLengthPrefix(stream, null,
                         (Type)MapType.Invoke(Model, new object[] { infos[i].ParameterType }), PrefixStyle.Fixed32, 0);
                 }

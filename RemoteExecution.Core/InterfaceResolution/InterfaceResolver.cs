@@ -36,6 +36,8 @@ namespace RemoteExecution.InterfaceResolution
         /// <returns></returns>
         private static bool RequiresIpEndPoint(Type type, string method)
         {
+            if (type == null)
+                return false;
             return type.GetMethods()
                 .Single(m => m.Name == method)
                 .CustomAttributes

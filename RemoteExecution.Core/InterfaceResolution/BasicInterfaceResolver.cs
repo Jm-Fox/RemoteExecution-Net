@@ -8,7 +8,7 @@ namespace RemoteExecution.InterfaceResolution
     /// </summary>
     public class BasicInterfaceResolver : InterfaceResolver
     {
-        private Dictionary<string, Type> _nameTypeMap = new Dictionary<string, Type>();
+        private readonly Dictionary<string, Type> _nameTypeMap = new Dictionary<string, Type>();
 
         /// <summary>
         /// Looks up the interface name. If not found, a <see cref="KeyNotFoundException" /> exception is thrown.
@@ -17,7 +17,7 @@ namespace RemoteExecution.InterfaceResolution
         /// <returns></returns>
         public override Type GetInterface(string interfaceName)
         {
-            return _nameTypeMap[interfaceName];
+            return _nameTypeMap.ContainsKey(interfaceName) ? _nameTypeMap[interfaceName] : null;
         }
 
         /// <summary>

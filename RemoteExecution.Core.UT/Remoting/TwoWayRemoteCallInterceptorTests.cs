@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using System.Threading;
 using NUnit.Framework;
 using RemoteExecution.Channels;
 using RemoteExecution.Dispatchers;
@@ -75,7 +77,7 @@ namespace RemoteExecution.Core.UT.Remoting
 				Expect.Call(() => _messageDispatcher.Register(_responseHandler));
 
 				Expect.Call(() => _channel.Send(Arg<IMessage>.Is.Anything));
-				Expect.Call(() => _responseHandler.WaitForResponse());
+				Expect.Call(() => _responseHandler.WaitForResponse(TimeSpan.MaxValue, CancellationToken.None));
 
 				Expect.Call(_responseHandler.HandledMessageType).Return(_handlerId);
 				Expect.Call(() => _messageDispatcher.Unregister(_handlerId));
@@ -118,7 +120,7 @@ namespace RemoteExecution.Core.UT.Remoting
 
 			_channel.AssertWasCalled(ch => ch.Send(Arg<RequestMessage>.Matches(r => r.IsResponseExpected)));
 			_messageDispatcher.AssertWasCalled(d => d.Register(_responseHandler));
-			_responseHandler.AssertWasCalled(h => h.WaitForResponse());
+			_responseHandler.AssertWasCalled(h => h.WaitForResponse(TimeSpan.MaxValue, CancellationToken.None));
 		}
 	}
 }

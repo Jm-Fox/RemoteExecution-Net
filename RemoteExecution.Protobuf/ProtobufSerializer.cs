@@ -59,11 +59,16 @@ namespace RemoteExecution
             {
                 case nameof(ProtobufRequestMessage):
                     ProtobufRequestMessage protobufRequest = (ProtobufRequestMessage)msg;
-                    bool dropIp = InterfaceResolver.SenderEndPointIsExpectedByInterface(protobufRequest);
-                    for (int index = 0; index < protobufRequest.Args.Length && (!dropIp | index < protobufRequest.Args.Length - 1); index++)
+                    if (protobufRequest.Args != null)
                     {
-                        object obj = protobufRequest.Args[index];
-                        Serializer.SerializeWithLengthPrefix(parameterStream, obj, PrefixStyle.Fixed32);
+                        bool dropIp = InterfaceResolver.SenderEndPointIsExpectedByInterface(protobufRequest);
+                        for (int index = 0;
+                            index < protobufRequest.Args.Length && (!dropIp || index < protobufRequest.Args.Length - 1);
+                            index++)
+                        {
+                            object obj = protobufRequest.Args[index];
+                            Serializer.SerializeWithLengthPrefix(parameterStream, obj, PrefixStyle.Fixed32);
+                        }
                     }
                     protobufRequest.SerializableArgs = parameterStream.ToArray();
                     Serializer.Serialize(primaryStream, msg);

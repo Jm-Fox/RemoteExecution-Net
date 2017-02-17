@@ -42,7 +42,6 @@
     <Compile Include="Channels\LidgrenClientChannelWrapper.cs" />
     <Compile Include="Channels\SharedLidgrenClientChannel.cs" />
     <Compile Include="Channels\DurableLidgrenClientChannel.cs" />
-    <Compile Include="ClosedConnectionResponse.cs" />
     <Compile Include="Connections\DurableClientConnection.cs" />
     <Compile Include="SharedLidgrenProvider.cs" />
     <Compile Include="DurableLidgrenProvider.cs" />

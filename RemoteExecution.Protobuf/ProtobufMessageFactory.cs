@@ -25,7 +25,8 @@ namespace RemoteExecution
                 CorrelationId = id,
                 Args = args,
                 MessageType = interfaceName,
-                MethodName = methodName
+                MethodName = methodName,
+                IsResponseExpected = isResponseExpected
             };
         }
 

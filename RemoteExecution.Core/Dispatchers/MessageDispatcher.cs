@@ -58,7 +58,7 @@ namespace RemoteExecution.Dispatchers
 
 			if (handler == null)
 				throw new InvalidOperationException(string.Format("Unable to dispatch message of type '{0}': no suitable handlers were found.", message.MessageType));
-
+            
 			handler.Handle(message);
 		}
 

@@ -1,6 +1,5 @@
 using System;
 using NUnit.Framework;
-using RemoteExecution.Config;
 using RemoteExecution.Core.IT.Helpers;
 using RemoteExecution.Dispatchers.Messages;
 using RemoteExecution.Executors;

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using RemoteExecution.Channels;
 using RemoteExecution.Config;
 using RemoteExecution.Dispatchers;
@@ -9,16 +10,42 @@ namespace RemoteExecution.Connections
     /// Same as ClientConnection, except exposes the durable channel's ConnectionClose event.
     /// Can only be used with DurableLidgrenClientChannel
     /// </summary>
-    public class DurableClientConnection : ClientConnection
+    public class DurableClientConnection : ClientConnection, IDurableConnection
     {
         /// <summary>
         /// [Singular] event fired when the connection is closed. The listener can suggest a new host and port where the service might be located.
         /// If not used, reconnection attempts will hit the same host and port.
         /// </summary>
-        public Action<ClosedConnectionResponse> HandleClosedConnectionResponse
+        public Action<ClosedConnectionResponse> ConnectionPaused
         {
-            get { return ((DurableLidgrenClientChannel) Channel).HandleClosedConnectionResponse; }
-            set { ((DurableLidgrenClientChannel) Channel).HandleClosedConnectionResponse = value; }
+            get { return GetDurableChannel().ConnectionPaused; }
+            set { GetDurableChannel().ConnectionPaused = value; }
+        }
+
+        /// <summary>
+        /// Event fired when connection is restored.
+        /// </summary>
+        public event Action ConnectionRestored {
+            add { GetDurableChannel().ConnectionRestored += value; }
+            remove { GetDurableChannel().ConnectionRestored -= value; }
+        }
+
+        /// <summary>
+        /// Event fired when connection is aborted.
+        /// </summary>
+        public event Action ConnectionAborted
+        {
+            add { GetDurableChannel().ConnectionAborted += value; }
+            remove { GetDurableChannel().ConnectionAborted -= value; }
+        }
+
+        /// <summary>
+        /// Event fired when connection is down.
+        /// </summary>
+        public event Action ConnectionInterrupted
+        {
+            add { GetDurableChannel().ConnectionInterrupted += value; }
+            remove { GetDurableChannel().ConnectionInterrupted -= value; }
         }
 
         /// <summary>
@@ -26,8 +53,8 @@ namespace RemoteExecution.Connections
         /// </summary>
         public int RetryAttempts
         {
-            get { return ((DurableLidgrenClientChannel) Channel).RetryAttempts; }
-            set { ((DurableLidgrenClientChannel) Channel).RetryAttempts = value; }
+            get { return GetDurableChannel().RetryAttempts; }
+            set { GetDurableChannel().RetryAttempts = value; }
         }
 
         #region ClientConnection Members
@@ -116,6 +143,12 @@ namespace RemoteExecution.Connections
         public DurableClientConnection(IClientChannel channel, IOperationDispatcher dispatcher, IConnectionConfig config)
             : base(channel, dispatcher, config)
         {
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private DurableLidgrenClientChannel GetDurableChannel()
+        {
+            return (DurableLidgrenClientChannel) Channel;
         }
 
         #endregion

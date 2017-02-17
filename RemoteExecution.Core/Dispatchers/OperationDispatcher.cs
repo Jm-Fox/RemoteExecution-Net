@@ -1,5 +1,7 @@
 ﻿using System;
+using RemoteExecution.Config;
 using RemoteExecution.Dispatchers.Handlers;
+using RemoteExecution.Dispatchers.Messages;
 
 namespace RemoteExecution.Dispatchers
 {
@@ -9,21 +11,43 @@ namespace RemoteExecution.Dispatchers
 	/// </summary>
 	public class OperationDispatcher : IOperationDispatcher
 	{
+	    private readonly IMessageFactory _messageFactory;
+
 		/// <summary>
 		/// Creates instance of operation dispatcher with new instance of <see cref="MessageDispatcher"/> class.
 		/// </summary>
 		public OperationDispatcher()
-			: this(new MessageDispatcher())
+			: this(new MessageDispatcher(), DefaultConfig.MessageFactory)
 		{
 		}
 
-		/// <summary>
-		/// Creates instance of operation dispatcher with given message dispatcher object.
-		/// </summary>
-		/// <param name="messageDispatcher">Message dispatcher.</param>
-		protected OperationDispatcher(IMessageDispatcher messageDispatcher)
+        /// <summary>
+        /// Creates instance of operation dispatcher with new instance of <see cref="MessageDispatcher"/> class.
+        /// </summary>
+        /// <param name="messageFactory">Message factory.</param>
+        public OperationDispatcher(IMessageFactory messageFactory)
+            : this(new MessageDispatcher(), messageFactory)
+        {
+        }
+
+        /// <summary>
+        /// Creates instance of operation dispatcher with given message dispatcher object.
+        /// </summary>
+        /// <param name="messageDispatcher">Message dispatcher.</param>
+        protected OperationDispatcher(IMessageDispatcher messageDispatcher)
+            :this (messageDispatcher, new DefaultMessageFactory())
+        {
+        }
+
+        /// <summary>
+        /// Creates instance of operation dispatcher with given message dispatcher object.
+        /// </summary>
+        /// <param name="messageDispatcher">Message dispatcher.</param>
+        /// <param name="messageFactory">Message factory.</param>
+        protected OperationDispatcher(IMessageDispatcher messageDispatcher, IMessageFactory messageFactory)
 		{
 			MessageDispatcher = messageDispatcher;
+		    _messageFactory = messageFactory;
 			MessageDispatcher.DefaultHandler = new DefaultRequestHandler();
 		}
 
@@ -60,7 +84,7 @@ namespace RemoteExecution.Dispatchers
 						handler.GetType().Name,
 						interfaceType.Name));
 
-			MessageDispatcher.Register(new RequestHandler(interfaceType, handler));
+			MessageDispatcher.Register(new RequestHandler(interfaceType, handler, _messageFactory));
 			return this;
 		}
 

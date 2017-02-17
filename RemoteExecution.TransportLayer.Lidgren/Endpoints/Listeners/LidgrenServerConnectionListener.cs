@@ -3,6 +3,7 @@ using System.Net;
 using System.Runtime.CompilerServices;
 using Lidgren.Network;
 using RemoteExecution.Channels;
+using RemoteExecution.Config;
 using RemoteExecution.Serializers;
 
 namespace RemoteExecution.Endpoints.Listeners
@@ -39,8 +40,9 @@ namespace RemoteExecution.Endpoints.Listeners
 			{
 				MaximumConnections = int.MaxValue,
 				Port = port,
-				LocalAddress = IPAddress.Parse(listenAddress)
-			};
+				LocalAddress = IPAddress.Parse(listenAddress),
+                ConnectionTimeout = (float)DefaultConfig.DefaultTimeout.TotalSeconds
+            };
 			_serializer = serializer;
 			_netServer = new NetServer(netConfig);
 

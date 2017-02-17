@@ -60,7 +60,7 @@ namespace RemoteExecution.ServiceFabric.Connections
             selectedEndpoint = ResolveAnyEndpoint().Result;
             
             clientConnection = new DurableClientConnection(selectedEndpoint.Address);
-            clientConnection.HandleClosedConnectionResponse = ConnectionClosed;
+            clientConnection.ConnectionPaused = ConnectionClosed;
         }
 
         private void ConnectionClosed(ClosedConnectionResponse response)

@@ -1,5 +1,8 @@
+using System.Threading;
 using AopAlliance.Intercept;
 using RemoteExecution.Channels;
+using RemoteExecution.Config;
+using RemoteExecution.Connections;
 using RemoteExecution.Dispatchers;
 using RemoteExecution.Dispatchers.Handlers;
 using RemoteExecution.Dispatchers.Messages;
@@ -13,15 +16,38 @@ namespace RemoteExecution.Remoting
 		private readonly IMessageDispatcher _messageDispatcher;
 	    private readonly IMessageFactory _messageFactory;
 
-		public TwoWayRemoteCallInterceptor(IOutputChannel channel, IMessageDispatcher messageDispatcher, IMessageFactory messageFactory, string interfaceName)
+	    private readonly IDurableConnection _durableConnection;
+        RemoteCancellationTokenSource _tokenSource;
+
+        public TwoWayRemoteCallInterceptor(IOutputChannel channel, IMessageDispatcher messageDispatcher, IMessageFactory messageFactory, string interfaceName)
 		{
 			_channel = channel;
+            _durableConnection = _channel as IDurableConnection;
 			_messageDispatcher = messageDispatcher;
 			_interfaceName = interfaceName;
 		    _messageFactory = messageFactory;
+		    GenerateNewCancellationToken();
+            if (_durableConnection != null)
+		    {
+		        _durableConnection.ConnectionAborted += () =>
+		        {
+                    _tokenSource.Aborted = true;
+		            _tokenSource.Cancel();
+                };
+		        _durableConnection.ConnectionRestored += () =>
+		        {
+                    _tokenSource.Restored = true;
+		            GenerateNewCancellationToken();
+		        };
+		    }
 		}
 
-		#region IMethodInterceptor Members
+	    private void GenerateNewCancellationToken()
+	    {
+	        _tokenSource = new RemoteCancellationTokenSource();
+	    }
+
+	    #region IMethodInterceptor Members
 
 		public object Invoke(IMethodInvocation invocation)
 		{
@@ -30,17 +56,48 @@ namespace RemoteExecution.Remoting
 			_messageDispatcher.Register(handler);
 			try
 			{
-				_channel.Send(_messageFactory.CreateRequestMessage(handler.HandledMessageType, _interfaceName, invocation.Method.Name, invocation.Arguments, true));
-				handler.WaitForResponse();
+			    if (_durableConnection == null)
+                {
+                    SendMessage(invocation, handler);
+                    handler.WaitForResponse(DefaultConfig.DefaultTimeout, CancellationToken.None);
+			    }
+			    else
+			    {
+			        do
+                    {
+                        SendMessage(invocation, handler);
+                        WaitForHandler(handler);
+                    } while (!handler.HasValue);
+			    }
 			}
 			finally
 			{
 				_messageDispatcher.Unregister(handler.HandledMessageType);
 			}
-			return handler.GetValue();
+            
+            (handler as IIncomplete)?.Complete(invocation.Method);
+            return handler.GetValue();
 		}
 
-		#endregion
+	    private void SendMessage(IMethodInvocation invocation, IResponseHandler handler)
+	    {
+	        _channel.Send(_messageFactory.CreateRequestMessage(handler.HandledMessageType, _interfaceName,
+	            invocation.Method.Name, invocation.Arguments, true));
+	    }
+
+	    private void WaitForHandler(IResponseHandler handler)
+	    {
+	        var tokenSource = _tokenSource;
+	        handler.WaitForResponse(DefaultConfig.DefaultTimeout, tokenSource.Token);
+            if (tokenSource.IsCancellationRequested)
+            {
+                if (tokenSource.Aborted)
+                    throw new ConnectionOpenException("Connection was closed.");
+                // No action required for connection restored.
+            }
+	    }
+
+	    #endregion
 
 		protected virtual IResponseHandler CreateResponseHandler()
 		{

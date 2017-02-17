@@ -5,7 +5,7 @@ using RemoteExecution.Dispatchers.Messages;
 
 namespace RemoteExecution.Dispatchers.Handlers {
     /// <summary>
-    /// Basic response handler
+    /// Basic response handler.
     /// </summary>
 	public class ResponseHandler : IResponseHandler, IIncomplete {
         private readonly ManualResetEventSlim _resetEvent = new ManualResetEventSlim(false);
@@ -24,16 +24,22 @@ namespace RemoteExecution.Dispatchers.Handlers {
         #region IResponseHandler Members
 
         /// <summary>
-        /// Type of messages handled
+        /// Indicates whether or not GetValue will throw a NullReferenceException (opposite)
+        /// </summary>
+        public bool HasValue => _response != null;
+
+        /// <summary>
+        /// Type of messages handled.
         /// </summary>
         public string HandledMessageType { get; private set; }
+
         /// <summary>
-        /// Handler group identifier
+        /// Handler group identifier.
         /// </summary>
 		public Guid HandlerGroupId { get; private set; }
 
         /// <summary>
-        /// Accepts message
+        /// Accepts message.
         /// </summary>
         /// <param name="msg"></param>
 		public void Handle(IMessage msg)
@@ -43,7 +49,7 @@ namespace RemoteExecution.Dispatchers.Handlers {
         }
 
         /// <summary>
-        /// Gets value from the response
+        /// Gets value from the response.
         /// </summary>
         /// <returns></returns>
 		public object GetValue()
@@ -52,11 +58,13 @@ namespace RemoteExecution.Dispatchers.Handlers {
         }
 
         /// <summary>
-        /// Waits until a response arrives
+        /// Waits until a response arrives.
         /// </summary>
-		public void WaitForResponse()
+        /// <param name="timeout">Timeout.</param>
+        /// <param name="cancellationToken">Cancellation token.</param>
+		public void WaitForResponse(TimeSpan timeout, CancellationToken cancellationToken)
         {
-            _resetEvent.Wait();
+            _resetEvent.Wait(timeout, cancellationToken);
         }
 
         /// <summary>

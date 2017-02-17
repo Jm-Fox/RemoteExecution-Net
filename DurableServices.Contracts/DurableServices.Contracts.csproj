@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{726300A3-ED66-461A-B1DD-B3A37F13932D}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DurableServices.Contracts</RootNamespace>
+    <AssemblyName>DurableServices.Contracts</AssemblyName>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DurableConfigurator.cs" />
+    <Compile Include="ICalculator.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\RemoteExecution.Core\RemoteExecution.Core.csproj">
+      <Project>{1F49092C-ADF4-4F6E-B383-2AE4CC3EF10B}</Project>
+      <Name>RemoteExecution.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RemoteExecution.Interfaces\RemoteExecution.Interfaces.csproj">
+      <Project>{DDB0303B-C762-445D-9CB1-A7D03239B660}</Project>
+      <Name>RemoteExecution.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RemoteExecution.Spring\RemoteExecution.Spring.csproj">
+      <Project>{84FC2762-9BF2-44D6-8FD9-0B580EEFED25}</Project>
+      <Name>RemoteExecution.Spring</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RemoteExecution.TransportLayer.Lidgren.Wrappers\RemoteExecution.TransportLayer.Lidgren.Wrappers.csproj">
+      <Project>{93B0F412-526E-4473-A435-094D47C435C7}</Project>
+      <Name>RemoteExecution.TransportLayer.Lidgren.Wrappers</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RemoteExecution.TransportLayer.Lidgren\RemoteExecution.TransportLayer.Lidgren.csproj">
+      <Project>{85D95624-EC1F-461C-B923-E824C6B56955}</Project>
+      <Name>RemoteExecution.TransportLayer.Lidgren</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RemoteExecution\RemoteExecution.csproj">
+      <Project>{A46D4206-7D05-4BF6-A30D-4D49A925323D}</Project>
+      <Name>RemoteExecution</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

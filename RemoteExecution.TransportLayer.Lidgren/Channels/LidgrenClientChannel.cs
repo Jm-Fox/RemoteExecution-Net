@@ -1,6 +1,7 @@
 using System;
 using System.Runtime.CompilerServices;
 using Lidgren.Network;
+using RemoteExecution.Config;
 using RemoteExecution.Endpoints.Listeners;
 using RemoteExecution.Serializers;
 
@@ -68,11 +69,15 @@ namespace RemoteExecution.Channels
 		{
 			_host = host;
 			_port = port;
-			_client = new NetClient(new NetPeerConfiguration(applicationId));
+		    _client =
+		        new NetClient(new NetPeerConfiguration(applicationId)
+		        {
+		            ConnectionTimeout = (float)DefaultConfig.DefaultTimeout.TotalSeconds
+		        });
             _messageRouter = new MessageRouter();
 			_messageRouter.DataReceived += HandleIncomingMessage;
-			_messageRouter.ConnectionClosed += c => OnConnectionClose();
-        }
+		    _messageRouter.ConnectionClosed += c => OnConnectionClose();
+		}
 
         #region IClientChannel Members
 
@@ -110,5 +115,5 @@ namespace RemoteExecution.Channels
 				MessageLoop.Dispose();
 			_messageLoop = null;
 		}
-	}
+    }
 }

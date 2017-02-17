@@ -60,7 +60,7 @@ namespace RemoteExecution.TransportLayer.Lidgren.Wrappers.IT.MS
             server.Start();
             using (DurableClientConnection client = new DurableClientConnection(url))
             {
-                client.HandleClosedConnectionResponse = response => response.ReconnectPort = Port2;
+                client.ConnectionPaused = response => response.ReconnectPort = Port2;
                 client.Open();
                 IWeakCalculator calculator = client.RemoteExecutor.Create<IWeakCalculator>();
                 Assert.AreEqual(4, calculator.Add(2, 2));
@@ -81,7 +81,7 @@ namespace RemoteExecution.TransportLayer.Lidgren.Wrappers.IT.MS
             server.Start();
             using (DurableClientConnection client = new DurableClientConnection(url))
             {
-                client.HandleClosedConnectionResponse = response => response.Abort = true;
+                client.ConnectionPaused = response => response.Abort = true;
                 client.Open();
                 IWeakCalculator calculator = client.RemoteExecutor.Create<IWeakCalculator>();
                 Assert.AreEqual(4, calculator.Add(2, 2));

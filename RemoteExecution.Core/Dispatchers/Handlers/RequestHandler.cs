@@ -2,20 +2,28 @@
 using System.Linq;
 using System.Reflection;
 using RemoteExecution.Dispatchers.Messages;
+using RemoteExecution.InterfaceResolution;
 
 namespace RemoteExecution.Dispatchers.Handlers
 {
 	internal class RequestHandler : IMessageHandler
 	{
+	    private IMessageFactory _messageFactory;
 		public object Handler { get; private set; }
 		public Type InterfaceType { get; private set; }
 
-		public RequestHandler(Type interfaceType, object handler)
+        public RequestHandler(Type interfaceType, object handler)
+            : this(interfaceType, handler, new DefaultMessageFactory())
+        {
+        }
+
+        public RequestHandler(Type interfaceType, object handler, IMessageFactory messageFactory)
 		{
 			InterfaceType = interfaceType;
 			Handler = handler;
 			HandledMessageType = interfaceType.Name;
 			HandlerGroupId = interfaceType.GUID;
+		    _messageFactory = messageFactory;
 		}
 
 		#region IMessageHandler Members
@@ -24,9 +32,12 @@ namespace RemoteExecution.Dispatchers.Handlers
 		public Guid HandlerGroupId { get; private set; }
 		public void Handle(IMessage message)
 		{
-			var request = (RequestMessage)message;
+			var request = (IRequestMessage)message;
+		    var methodInfo = InterfaceResolver.Singleton.GetInterface(request.MessageType)?.GetMethod(request.MethodName);
+            if (methodInfo != null)
+                (request as IIncomplete)?.Complete(methodInfo);
 
-			if (request.IsResponseExpected)
+            if (request.IsResponseExpected)
 				ExecuteWithResponse(request);
 			else
 				ExecuteWithoutResponse(request);
@@ -34,7 +45,7 @@ namespace RemoteExecution.Dispatchers.Handlers
 
 		#endregion
 
-		private object Execute(RequestMessage requestMessage)
+		private object Execute(IRequestMessage requestMessage)
 		{
 			try
 			{
@@ -54,19 +65,19 @@ namespace RemoteExecution.Dispatchers.Handlers
 			}
 		}
 
-		private void ExecuteWithResponse(RequestMessage msg)
+		private void ExecuteWithResponse(IRequestMessage msg)
 		{
 			try
 			{
-				msg.Channel.Send(new ResponseMessage(msg.CorrelationId, Execute(msg)));
+				msg.Channel.Send(_messageFactory.CreateResponseMessage(msg.CorrelationId, Execute(msg)));
 			}
 			catch (Exception e)
 			{
-				msg.Channel.Send(new ExceptionResponseMessage(msg.CorrelationId, e.GetType(), e.Message));
+				msg.Channel.Send(_messageFactory.CreateExceptionResponseMessage(msg.CorrelationId, e.GetType(), e.Message));
 			}
 		}
 
-		private void ExecuteWithoutResponse(RequestMessage msg)
+		private void ExecuteWithoutResponse(IRequestMessage msg)
 		{
 			try
 			{
