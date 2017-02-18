@@ -40,10 +40,11 @@ namespace RemoteExecution.Core.UT.Channels
 			FireChannelClosed();
 		}
 
-        public override void SendData(byte[] data)
+        public override bool SendData(byte[] data)
 		{
 			SentData = data;
-		}
+            return true;
+        }
 	}
 
 	[TestFixture]

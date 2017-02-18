@@ -1,14 +1,13 @@
 ﻿using System.Net;
-using RemoteExecution.InterfaceResolution;
+using RemoteExecution.Executors;
 using RemoteExecution.Remoting;
-using RemoteExecution.TransportLayer;
 
 namespace EncryptedServices.Contracts
 {
     public interface IAuthenticator
     {
-        [OneWay]
-        [RequiresIpEndPoint]
+        [ForcedReturnPolicy(ReturnPolicy.OneWay)]
+        [IpEndPointPolicy(true)]
         void EncryptSession(byte[] encryptedSecret, IPEndPoint endPoint = null);
 
         SerializableRSAParameters GetRsaParameters();

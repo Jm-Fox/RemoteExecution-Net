@@ -123,18 +123,20 @@ namespace RemoteExecution.Channels
         /// Sends given message through this channel.
         /// </summary>
         /// <param name="message">Message to send.</param>
-        public override void Send(IMessage message)
+		/// <returns>True if the connection is open, false if the connection is paused.</returns>
+        public override bool Send(IMessage message)
         {
-            Inner.Send(message);
+            return Inner.Send(message);
         }
 
         /// <summary>
         /// Sends data through channel.
         /// </summary>
         /// <param name="data">Data to send.</param>
-        public override void SendData(byte[] data)
+		/// <returns>True if the connection is open, false if the connection is paused.</returns>
+        public override bool SendData(byte[] data)
         {
-            Inner.SendData(data);
+            return Inner.SendData(data);
         }
 
         #endregion

@@ -75,9 +75,14 @@
     <Compile Include="Executors\IBroadcastRemoteExecutor.cs" />
     <Compile Include="Executors\IRemoteExecutor.cs" />
     <Compile Include="Executors\IRemoteExecutorFactory.cs" />
-    <Compile Include="Executors\NoResultMethodExecution.cs" />
+    <Compile Include="Executors\ReturnPolicy.cs" />
     <Compile Include="IIncomplete.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Remoting\DurablePolicyAttribute.cs" />
+    <Compile Include="Remoting\ForcedReturnPolicyAttribute.cs" />
+    <Compile Include="Remoting\IpEndPointPolicyAttribute.cs" />
+    <Compile Include="Remoting\RemoteExecutionPolicy.cs" />
+    <Compile Include="Remoting\TimeoutPolicyAttribute.cs" />
     <Compile Include="Schedulers\ITaskScheduler.cs" />
     <Compile Include="Serializers\IMessageSerializer.cs" />
     <Compile Include="TransportLayer\ITransportLayerProvider.cs" />

@@ -41,7 +41,7 @@ namespace RemoteExecution.Endpoints.Listeners
 				MaximumConnections = int.MaxValue,
 				Port = port,
 				LocalAddress = IPAddress.Parse(listenAddress),
-                ConnectionTimeout = (float)DefaultConfig.DefaultTimeout.TotalSeconds
+                ConnectionTimeout = (float)DefaultConfig.Timeout.TotalSeconds
             };
 			_serializer = serializer;
 			_netServer = new NetServer(netConfig);

@@ -23,10 +23,11 @@ namespace RemoteExecution.Core.IT.Helpers
 
 		public bool IsOpen { get { return true; } }
 		public Guid Id { get; private set; }
-		public void Send(IMessage message)
+		public bool Send(IMessage message)
 		{
 			OnSend(message);
-		}
+            return true;
+        }
 
 		#endregion
 	}

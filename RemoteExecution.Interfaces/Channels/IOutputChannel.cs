@@ -11,6 +11,8 @@ namespace RemoteExecution.Channels
 		/// Sends given message through this channel.
 		/// </summary>
 		/// <param name="message">Message to send.</param>
-		void Send(IMessage message);
+		/// <exception cref="ConnectionOpenException">Thrown by non-durable connections when called if closed.</exception>
+		/// <returns>True if the connection is open, false if the connection is paused.</returns>
+		bool Send(IMessage message);
 	}
 }

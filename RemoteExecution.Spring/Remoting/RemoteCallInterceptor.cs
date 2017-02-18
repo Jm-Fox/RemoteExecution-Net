@@ -1,4 +1,3 @@
-using System.Linq;
 using AopAlliance.Intercept;
 using RemoteExecution.Executors;
 
@@ -6,29 +5,25 @@ namespace RemoteExecution.Remoting
 {
 	internal class RemoteCallInterceptor : IMethodInterceptor
 	{
-		private readonly NoResultMethodExecution _noResultMethodExecution;
+        private readonly RemoteExecutionPolicies _policies;
 		private readonly IMethodInterceptor _oneWayInterceptor;
 		private readonly IMethodInterceptor _twoWayInterceptor;
 
-		public RemoteCallInterceptor(IMethodInterceptor oneWayInterceptor, IMethodInterceptor twoWayInterceptor, NoResultMethodExecution noResultMethodExecution)
+		public RemoteCallInterceptor(IMethodInterceptor oneWayInterceptor, IMethodInterceptor twoWayInterceptor, RemoteExecutionPolicies policies)
 		{
 			_oneWayInterceptor = oneWayInterceptor;
 			_twoWayInterceptor = twoWayInterceptor;
-			_noResultMethodExecution = noResultMethodExecution;
+		    _policies = policies;
 		}
 
 		#region IMethodInterceptor Members
 
 		public object Invoke(IMethodInvocation invocation)
         {
-            object[] attributes = invocation.Method.GetCustomAttributes(true);
-            if (invocation.Method.ReturnType == typeof(void) || attributes.Any(a => a is OneWayAttribute))
-		    {
-		        if (_noResultMethodExecution == NoResultMethodExecution.OneWay && !attributes.Any(a => a is TwoWayAttribute) || attributes.Any(a => a is OneWayAttribute))
-		            return _oneWayInterceptor.Invoke(invocation);
-		    }
-		    return _twoWayInterceptor.Invoke(invocation);
-		}
+            return _policies[invocation.Method].ActualReturnPolicy == ReturnPolicy.OneWay
+                ? _oneWayInterceptor.Invoke(invocation)
+                : _twoWayInterceptor.Invoke(invocation);
+        }
 
 		#endregion
 	}

@@ -1,6 +1,5 @@
 ﻿using System.Net;
-using RemoteExecution.InterfaceResolution;
-using RemoteExecution.TransportLayer;
+using RemoteExecution.Remoting;
 
 namespace RemoteExecution.Protobuf.UT.MS
 {
@@ -8,7 +7,7 @@ namespace RemoteExecution.Protobuf.UT.MS
     {
         int Add(int x, int y);
 
-        [RequiresIpEndPoint]
+        [IpEndPointPolicy(true)]
         int Divide(int x, int y, IPEndPoint endPoint = null);
     }
 }

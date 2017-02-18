@@ -57,7 +57,7 @@ namespace EncryptedServices.Client
                 resolver.Register(new IPEndPoint(IPAddress.Loopback, 3133),
                     new DebugNetAESEncryption(EmptyPeer, secretString));
                 Console.WriteLine("Connection is encrypted.");
-                const int wait = 16;
+                const int wait = 160;
                 Console.WriteLine($"Pausing for {wait} milliseconds to ensure server has time to register crypto provider...");
                 Thread.Sleep(wait);
                 Console.WriteLine("Done waiting.");

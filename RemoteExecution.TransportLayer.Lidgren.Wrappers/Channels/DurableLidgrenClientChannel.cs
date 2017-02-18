@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Runtime.CompilerServices;
 using Lidgren.Network;
+using RemoteExecution.Config;
 using RemoteExecution.Connections;
 using RemoteExecution.Dispatchers.Messages;
 
@@ -53,6 +53,10 @@ namespace RemoteExecution.Channels
         /// Event fired when connection is down.
         /// </summary>
         public event Action ConnectionInterrupted;
+
+        private bool hasPendingOutgoing = false;
+
+        private readonly object dumpPendingOutgoingLock = new object();
 
         /// <summary>
         /// Bytes that are awaiting sending due to temporary shutdown of the connection
@@ -128,16 +132,18 @@ namespace RemoteExecution.Channels
         /// Sends given message through this channel.
         /// </summary>
         /// <param name="message">Message to send.</param>
-        public override void Send(IMessage message)
+		/// <returns>True if the connection is open, false if the connection is paused.</returns>
+        public override bool Send(IMessage message)
         {
-            SendData(Inner.Serializer.Serialize(message));
+            return SendData(Inner.Serializer.Serialize(message));
         }
 
         /// <summary>
         /// Sends data through channel.
         /// </summary>
         /// <param name="data">Data to send.</param>
-        public override void SendData(byte[] data)
+		/// <returns>True if the connection is open, false if the connection is paused.</returns>
+        public override bool SendData(byte[] data)
         {
             if (actuallyClosed)
             {
@@ -146,14 +152,15 @@ namespace RemoteExecution.Channels
             if (!IsOpen)
             {
                 PendingOutgoing.Add(data);
+                hasPendingOutgoing = true;
+                return false;
             }
-            else
-            {
-                // A(n extremely rare) race condition can leave messages in the Queue, not to be resent until the next failure.
-                // This ensures no message is left behind.
+            // A(n extremely rare) race condition can leave messages in the Queue, not to be resent until the next failure.
+            // This ensures no message is left behind.
+            if (hasPendingOutgoing)
                 SendPendingOutgoing();
-                Inner.SendData(data);
-            }
+            Inner.SendData(data);
+            return true;
         }
 
         #endregion
@@ -167,8 +174,7 @@ namespace RemoteExecution.Channels
             base.OnConnectionClose();
             Dispose();
         }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        
         private void RestoreConnection(NetConnection connection, ClosedConnectionResponse response)
         {
             Connection = connection;
@@ -178,15 +184,21 @@ namespace RemoteExecution.Channels
             failures = 0;
             SendPendingOutgoing();
         }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        
         private void SendPendingOutgoing()
         {
-            while (!PendingOutgoing.IsEmpty)
+            DefaultConfig.TaskScheduler.Execute(() =>
             {
-                PendingOutgoing.TryTake(out byte[] data);
-                Inner.SendData(data);
-            }
+                lock (dumpPendingOutgoingLock)
+                {
+                    while (!PendingOutgoing.IsEmpty)
+                    {
+                        PendingOutgoing.TryTake(out byte[] data);
+                        Inner.SendData(data);
+                    }
+                    hasPendingOutgoing = false;
+                }
+            });
         }
 
         #endregion

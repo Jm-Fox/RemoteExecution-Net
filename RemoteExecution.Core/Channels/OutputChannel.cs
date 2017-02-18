@@ -55,12 +55,12 @@ namespace RemoteExecution.Channels
 		/// Sends given message through this channel.
 		/// </summary>
 		/// <param name="message">Message to send.</param>
-		public virtual void Send(IMessage message)
+		public virtual bool Send(IMessage message)
 		{
 			if (!IsOpen)
 				throw new NotConnectedException("Channel is closed.");
 
-			SendData(Serializer.Serialize(message));
+			return SendData(Serializer.Serialize(message));
 		}
 
 		#endregion
@@ -85,6 +85,6 @@ namespace RemoteExecution.Channels
 		/// Sends data through channel.
 		/// </summary>
 		/// <param name="data">Data to send.</param>
-		public abstract void SendData(byte[] data);
+		public abstract bool SendData(byte[] data);
 	}
 }

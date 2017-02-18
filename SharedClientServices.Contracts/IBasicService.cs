@@ -1,5 +1,5 @@
-﻿using RemoteExecution.TransportLayer;
-using System.Net;
+﻿using System.Net;
+using RemoteExecution.Executors;
 using RemoteExecution.Remoting;
 
 namespace SharedClientServices.Contracts
@@ -8,8 +8,8 @@ namespace SharedClientServices.Contracts
     {
         int Add(int x, int y);
 
-        [OneWay]
-        [RequiresIpEndPoint]
+        [ForcedReturnPolicy(ReturnPolicy.OneWay)]
+        [IpEndPointPolicy(true)]
         void SayHello(string message, IPEndPoint endPoint = null);
     }
 }

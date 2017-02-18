@@ -20,7 +20,7 @@ namespace OneWayMethodServices.Client
 			{
 				client.Open();
 
-				var longRunningOperation = Aspects.WithTimeMeasure(client.RemoteExecutor.Create<ILongRunningOperation>(NoResultMethodExecution.OneWay));
+				var longRunningOperation = Aspects.WithTimeMeasure(client.RemoteExecutor.Create<ILongRunningOperation>(ReturnPolicy.OneWay));
 
 				longRunningOperation.Repeat("a", 3);
 				longRunningOperation.RepeatWithCallback("b", 3);

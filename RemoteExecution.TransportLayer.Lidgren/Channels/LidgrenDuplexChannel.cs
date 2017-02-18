@@ -103,15 +103,17 @@ namespace RemoteExecution.Channels
 				Connection.Disconnect("Channel closed");
 		}
 
-		/// <summary>
-		/// Sends data through channel.
-		/// </summary>
-		/// <param name="data">Data to send.</param>
-		public override void SendData(byte[] data)
+        /// <summary>
+        /// Sends data through channel.
+        /// </summary>
+        /// <param name="data">Data to send.</param>
+        /// <returns>True if the connection is open, false if the connection is paused.</returns>
+        public override bool SendData(byte[] data)
 		{
 			if (!IsOpen)
 				throw new NotConnectedException("Network connection is not opened.");
             Connection.Peer.SendMessage(CreateOutgoingMessage(data), Connection, NetDeliveryMethod.ReliableUnordered, 0);
+		    return true;
 		}
 
 	    /// <summary>

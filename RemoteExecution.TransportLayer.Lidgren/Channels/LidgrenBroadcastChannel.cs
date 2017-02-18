@@ -50,13 +50,15 @@ namespace RemoteExecution.Channels
         /// Sends data through channel.
         /// </summary>
         /// <param name="data">Data to send.</param>
-        public override void SendData(byte[] data)
+		/// <returns>True if the connection is open, false if the connection is paused.</returns>
+        public override bool SendData(byte[] data)
 		{
 			if (!IsOpen)
 				throw new NotConnectedException("Connection is not opened.");
 
 			if (ReceiverCount > 0)
 				_netServer.SendToAll(CreateOutgoingMessage(data), NetDeliveryMethod.ReliableUnordered);
+		    return true;
 		}
 
 		private NetOutgoingMessage CreateOutgoingMessage(byte[] data)

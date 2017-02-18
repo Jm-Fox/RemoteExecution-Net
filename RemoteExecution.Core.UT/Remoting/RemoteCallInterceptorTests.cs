@@ -14,20 +14,21 @@ namespace RemoteExecution.Core.UT.Remoting
 		{
 			string Hello(int x);
 			void Notify(string text);
-            [OneWay]
-		    void DontNotifyAgain(string text);
-            [TwoWay]
+            [ForcedReturnPolicy(ReturnPolicy.OneWay)]
+            void DontNotifyAgain(string text);
+            [ForcedReturnPolicy(ReturnPolicy.TwoWay)]
             void NotifyMeAgain(string text);
-            [OneWay]
+            [ForcedReturnPolicy(ReturnPolicy.OneWay)]
 		    string IgnoreHello(int x);
 		}
 
 		private IMethodInterceptor _oneWayInterceptor;
 		private IMethodInterceptor _twoWayInterceptor;
 
-		private ITestInterface GetInvocationHelper(NoResultMethodExecution noResultMethodExecution = NoResultMethodExecution.TwoWay)
+		private ITestInterface GetInvocationHelper(ReturnPolicy returnPolicy = ReturnPolicy.TwoWay)
 		{
-			var subject = new RemoteCallInterceptor(_oneWayInterceptor, _twoWayInterceptor, noResultMethodExecution);
+            RemoteExecutionPolicies policies = new RemoteExecutionPolicies(typeof(ITestInterface), returnPolicy);
+			var subject = new RemoteCallInterceptor(_oneWayInterceptor, _twoWayInterceptor, policies);
 			return (ITestInterface)new ProxyFactory(typeof(ITestInterface), subject).GetProxy();
 		}
 
@@ -43,9 +44,9 @@ namespace RemoteExecution.Core.UT.Remoting
 		#endregion
 
 		[Test]
-		[TestCase(NoResultMethodExecution.OneWay)]
-		[TestCase(NoResultMethodExecution.TwoWay)]
-		public void Should_always_execute_operations_returning_result_as_two_way(NoResultMethodExecution executionMode)
+		[TestCase(ReturnPolicy.OneWay)]
+		[TestCase(ReturnPolicy.TwoWay)]
+		public void Should_always_execute_operations_returning_result_as_two_way(ReturnPolicy executionMode)
 		{
 			GetInvocationHelper(executionMode).Hello(5);
 			_twoWayInterceptor.AssertWasCalled(i => i.Invoke(Arg<IMethodInvocation>.Is.Anything));
@@ -53,9 +54,9 @@ namespace RemoteExecution.Core.UT.Remoting
 		}
 
         [Test]
-        [TestCase(NoResultMethodExecution.OneWay)]
-        [TestCase(NoResultMethodExecution.TwoWay)]
-        public void Should_defer_execute_operations_returning_result_to_attribute_two_way(NoResultMethodExecution executionMode)
+        [TestCase(ReturnPolicy.OneWay)]
+        [TestCase(ReturnPolicy.TwoWay)]
+        public void Should_defer_execute_operations_returning_result_to_attribute_two_way(ReturnPolicy executionMode)
         {
             GetInvocationHelper(executionMode).NotifyMeAgain("test");
             _twoWayInterceptor.AssertWasCalled(i => i.Invoke(Arg<IMethodInvocation>.Is.Anything));
@@ -63,9 +64,9 @@ namespace RemoteExecution.Core.UT.Remoting
         }
 
         [Test]
-        [TestCase(NoResultMethodExecution.OneWay)]
-        [TestCase(NoResultMethodExecution.TwoWay)]
-        public void Should_defer_execute_operations_returning_result_to_attribute_one_way_1(NoResultMethodExecution executionMode)
+        [TestCase(ReturnPolicy.OneWay)]
+        [TestCase(ReturnPolicy.TwoWay)]
+        public void Should_defer_execute_operations_returning_result_to_attribute_one_way_1(ReturnPolicy executionMode)
         {
             GetInvocationHelper(executionMode).DontNotifyAgain("test");
             _oneWayInterceptor.AssertWasCalled(i => i.Invoke(Arg<IMethodInvocation>.Is.Anything));
@@ -73,9 +74,9 @@ namespace RemoteExecution.Core.UT.Remoting
         }
 
         [Test]
-        [TestCase(NoResultMethodExecution.OneWay)]
-        [TestCase(NoResultMethodExecution.TwoWay)]
-        public void Should_defer_execute_operations_returning_result_to_attribute_one_way_2(NoResultMethodExecution executionMode)
+        [TestCase(ReturnPolicy.OneWay)]
+        [TestCase(ReturnPolicy.TwoWay)]
+        public void Should_defer_execute_operations_returning_result_to_attribute_one_way_2(ReturnPolicy executionMode)
         {
             GetInvocationHelper(executionMode).IgnoreHello(5);
             _oneWayInterceptor.AssertWasCalled(i => i.Invoke(Arg<IMethodInvocation>.Is.Anything));
@@ -85,7 +86,7 @@ namespace RemoteExecution.Core.UT.Remoting
         [Test]
 		public void Should_execute_no_result_returning_operation_as_one_way()
 		{
-			GetInvocationHelper(NoResultMethodExecution.OneWay).Notify("test");
+			GetInvocationHelper(ReturnPolicy.OneWay).Notify("test");
 			_oneWayInterceptor.AssertWasCalled(i => i.Invoke(Arg<IMethodInvocation>.Is.Anything));
 			_twoWayInterceptor.AssertWasNotCalled(i => i.Invoke(Arg<IMethodInvocation>.Is.Anything));
 		}

@@ -16,7 +16,7 @@ namespace DurableServices.Contracts
         /// </summary>
         public static void Configure()
         {
-            DefaultConfig.DefaultTimeout = new TimeSpan(0, 0, 15);
+            DefaultConfig.Timeout = new TimeSpan(0, 0, 15);
             DefaultConfig.MessageSerializer = new ProtobufSerializer();
             DefaultConfig.MessageFactory = new ProtobufMessageFactory();
             DefaultConfig.RemoteExecutorFactory = new RemoteExecutorFactory();

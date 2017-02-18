@@ -72,7 +72,7 @@ namespace RemoteExecution.Channels
 		    _client =
 		        new NetClient(new NetPeerConfiguration(applicationId)
 		        {
-		            ConnectionTimeout = (float)DefaultConfig.DefaultTimeout.TotalSeconds
+		            ConnectionTimeout = (float)DefaultConfig.Timeout.TotalSeconds
 		        });
             _messageRouter = new MessageRouter();
 			_messageRouter.DataReceived += HandleIncomingMessage;

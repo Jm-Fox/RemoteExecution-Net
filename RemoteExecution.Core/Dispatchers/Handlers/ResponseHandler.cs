@@ -64,7 +64,13 @@ namespace RemoteExecution.Dispatchers.Handlers {
         /// <param name="cancellationToken">Cancellation token.</param>
 		public void WaitForResponse(TimeSpan timeout, CancellationToken cancellationToken)
         {
-            _resetEvent.Wait(timeout, cancellationToken);
+            try
+            {
+                _resetEvent.Wait(timeout, cancellationToken);
+            }
+            catch (OperationCanceledException)
+            {
+            }
         }
 
         /// <summary>

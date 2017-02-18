@@ -62,10 +62,9 @@
     <Compile Include="Endpoints\StatefulServerEndpoint.cs" />
     <Compile Include="Endpoints\StatelessServerEndpoint.cs" />
     <Compile Include="InterfaceResolution\InterfaceResolver.cs" />
-    <Compile Include="Remoting\OneWayAttribute.cs" />
-    <Compile Include="Remoting\TimeoutAttribute.cs" />
-    <Compile Include="Remoting\TwoWayAttribute.cs" />
-    <Compile Include="TransportLayer\RequiresIPEndPointAttribute.cs" />
+    <Compile Include="Remoting\MethodInfoExtensions.cs" />
+    <Compile Include="Remoting\RemoteExecutionPolicies.cs" />
+    <Compile Include="Remoting\TypeExtensions.cs" />
     <Compile Include="TransportLayer\TransportLayerResolver.cs" />
     <Compile Include="Connections\ClientConnection.cs" />
     <Compile Include="Connections\RemoteConnection.cs" />

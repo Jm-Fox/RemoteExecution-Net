@@ -1,11 +1,12 @@
 ﻿using System;
+using RemoteExecution.Executors;
 using RemoteExecution.Remoting;
 
 namespace RemoteExecution.TransportLayer.Lidgren.Wrappers.IT.MS
 {
     public interface IWeakCalculator
     {
-        [OneWay]
+        [ForcedReturnPolicy(ReturnPolicy.OneWay)]
         void Destroy();
 
         int Add(int x, int y);

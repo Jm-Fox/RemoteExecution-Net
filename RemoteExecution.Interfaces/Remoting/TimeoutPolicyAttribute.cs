@@ -6,20 +6,18 @@ namespace RemoteExecution.Remoting
     /// Provides a non-default timeout for method invocations.
     /// </summary>
     [AttributeUsage(AttributeTargets.Interface | AttributeTargets.Method)]
-    public class TimeoutAttribute : Attribute
+    public class TimeoutPolicyAttribute : Attribute
     {
         /// <summary>
         /// Duration before a method invocation will timeout.
         /// </summary>
         public TimeSpan Timeout { get; }
-
         /// <summary>
         /// Basic constructor.
         /// </summary>
-        /// <param name="timeout"></param>
-        public TimeoutAttribute(TimeSpan timeout)
+        public TimeoutPolicyAttribute(double seconds)
         {
-            Timeout = timeout;
+            Timeout = TimeSpan.FromSeconds(seconds);
         }
     }
 }

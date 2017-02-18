@@ -8,6 +8,8 @@ namespace DurableServices.Server
     {
         internal static void Main(string[] args)
         {
+            Console.WriteLine("Unreliable server started.\r\n");
+            Console.WriteLine("Try closing the server while the client is running, and starting the server again.\r\n");
             DurableConfigurator.Configure();
             Host host = new Host("net://127.0.0.1:3133/DurableServices");
             Greet();

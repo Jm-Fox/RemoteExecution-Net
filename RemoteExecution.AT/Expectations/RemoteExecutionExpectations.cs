@@ -22,7 +22,7 @@ namespace RemoteExecution.AT.Expectations
 			using (StartServer())
 			using (var client = OpenClientConnection())
 			{
-				var remote = client.RemoteExecutor.Create<IRemoteService>(NoResultMethodExecution.OneWay);
+				var remote = client.RemoteExecutor.Create<IRemoteService>(ReturnPolicy.OneWay);
 
 				var watch = new Stopwatch();
 				watch.Start();

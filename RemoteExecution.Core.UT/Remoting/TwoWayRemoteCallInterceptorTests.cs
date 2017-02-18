@@ -6,6 +6,7 @@ using RemoteExecution.Channels;
 using RemoteExecution.Dispatchers;
 using RemoteExecution.Dispatchers.Handlers;
 using RemoteExecution.Dispatchers.Messages;
+using RemoteExecution.Executors;
 using RemoteExecution.Remoting;
 using Rhino.Mocks;
 using Spring.Aop.Framework;
@@ -19,8 +20,8 @@ namespace RemoteExecution.Core.UT.Remoting
 		{
 			private readonly IResponseHandler _responseHandler;
 
-			public TestableTwoWayRemoteCallInterceptor(IOutputChannel channel, IMessageDispatcher dispatcher, IResponseHandler responseHandler, string interfaceName)
-				: base(channel, dispatcher, new DefaultMessageFactory(), interfaceName)
+			public TestableTwoWayRemoteCallInterceptor(IOutputChannel channel, IMessageDispatcher dispatcher, IResponseHandler responseHandler, string interfaceName, RemoteExecutionPolicies policies)
+				: base(channel, dispatcher, new DefaultMessageFactory(), interfaceName, policies)
 			{
 				_responseHandler = responseHandler;
 			}
@@ -46,7 +47,8 @@ namespace RemoteExecution.Core.UT.Remoting
 
 		private ITestInterface GetInvocationHelper()
 		{
-			var subject = new TestableTwoWayRemoteCallInterceptor(_channel, _messageDispatcher, _responseHandler, _interfaceName);
+		    var subject = new TestableTwoWayRemoteCallInterceptor(_channel, _messageDispatcher, _responseHandler,
+		        _interfaceName, new RemoteExecutionPolicies(typeof(ITestInterface), ReturnPolicy.TwoWay));
 			return (ITestInterface)new ProxyFactory(typeof(ITestInterface), subject).GetProxy();
 		}
 

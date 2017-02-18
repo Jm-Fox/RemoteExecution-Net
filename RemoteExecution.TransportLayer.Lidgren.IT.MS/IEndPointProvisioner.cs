@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Net;
-using RemoteExecution.InterfaceResolution;
+using RemoteExecution.Remoting;
 
 namespace RemoteExecution.TransportLayer.Lidgren.IT.MS
 {
     public interface IEndPointProvisioner
     {
-        [RequiresIpEndPoint]
+        [IpEndPointPolicy(true)]
         void DoStuff(IPEndPoint endPoint = null);
     }
 

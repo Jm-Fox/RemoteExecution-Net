@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using RemoteExecution.Dispatchers.Messages;
-using RemoteExecution.TransportLayer;
+using RemoteExecution.Remoting;
 
 namespace RemoteExecution.InterfaceResolution
 {
@@ -52,8 +52,8 @@ namespace RemoteExecution.InterfaceResolution
             return type.GetMethods()
                 .Single(m => m.Name == method)
                 .CustomAttributes
-                .Any(a => a.AttributeType.AssemblyQualifiedName == typeof(RequiresIpEndPointAttribute).AssemblyQualifiedName);
-            // For whatever reason (a => a is RequiresIpEndPointAttribute), and its variants, are always false, despite the types appearing identical.
+                .Any(a => a.AttributeType.AssemblyQualifiedName == typeof(IpEndPointPolicyAttribute).AssemblyQualifiedName);
+            // For whatever reason (a => a is IpEndPointPolicyAttribute), and its variants, are always false, despite the types appearing identical.
         }
 
         /// <summary>
