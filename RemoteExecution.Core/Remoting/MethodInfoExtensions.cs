@@ -36,7 +36,7 @@ namespace RemoteExecution.Remoting
             var ipPolicy = me.GetAttributeOrDefault<IpEndPointPolicyAttribute>();
             var returnPolicy = me.GetAttributeOrDefault<ForcedReturnPolicyAttribute>();
 
-            var ans = me.GetAttributeOrDefault<RemoteExecutionPolicy>() ?? defaultPolicy;
+            var ans = me.GetAttributeOrDefault<RemoteExecutionPolicy>() ?? defaultPolicy.Clone();
             
             if (timeoutPolicy != null)
                 ans.Timeout = timeoutPolicy.Timeout;

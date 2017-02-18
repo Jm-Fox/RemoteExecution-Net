@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using RemoteExecution.Executors;
 
 namespace RemoteExecution.Remoting
@@ -45,5 +44,22 @@ namespace RemoteExecution.Remoting
         /// Actual return policy to be used.
         /// </summary>
         public ReturnPolicy ActualReturnPolicy => ForcedReturnPolicy ?? DefaultReturnPolicy;
+
+        /// <summary>
+        /// Creates a copy of this policy
+        /// </summary>
+        /// <returns>Member-wise copy</returns>
+        public RemoteExecutionPolicy Clone()
+        {
+            return new RemoteExecutionPolicy
+            {
+                Timeout = Timeout,
+                NoRetries = NoRetries,
+                TimeoutIsStrict = TimeoutIsStrict,
+                RequiresIpEndPoint = RequiresIpEndPoint,
+                DefaultReturnPolicy = DefaultReturnPolicy,
+                ForcedReturnPolicy = ForcedReturnPolicy
+            };
+        }
     }
 }
