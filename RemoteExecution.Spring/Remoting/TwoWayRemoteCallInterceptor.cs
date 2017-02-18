@@ -19,7 +19,7 @@ namespace RemoteExecution.Remoting
 
 	    private readonly IDurableConnection _durableConnection;
 	    private readonly RemoteExecutionPolicies _policies;
-        RemoteCancellationTokenSource _tokenSource;
+        protected RemoteCancellationTokenSource _tokenSource;
 
         public TwoWayRemoteCallInterceptor(IOutputChannel channel, IMessageDispatcher messageDispatcher, IMessageFactory messageFactory, string interfaceName, RemoteExecutionPolicies policies)
         {

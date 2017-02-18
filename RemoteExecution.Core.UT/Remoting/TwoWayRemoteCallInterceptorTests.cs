@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading;
 using NUnit.Framework;
 using RemoteExecution.Channels;
+using RemoteExecution.Config;
 using RemoteExecution.Dispatchers;
 using RemoteExecution.Dispatchers.Handlers;
 using RemoteExecution.Dispatchers.Messages;
@@ -30,6 +31,8 @@ namespace RemoteExecution.Core.UT.Remoting
 			{
 				return _responseHandler;
 			}
+
+		    public CancellationToken Token => _tokenSource.Token;
 		}
 
 		public interface ITestInterface
@@ -45,11 +48,13 @@ namespace RemoteExecution.Core.UT.Remoting
 		private const string _handlerId = "handlerID";
 		private const string _interfaceName = "testInterface";
 
-		private ITestInterface GetInvocationHelper()
+		private Tuple<ITestInterface, CancellationToken> GetInvocationHelper()
 		{
 		    var subject = new TestableTwoWayRemoteCallInterceptor(_channel, _messageDispatcher, _responseHandler,
 		        _interfaceName, new RemoteExecutionPolicies(typeof(ITestInterface), ReturnPolicy.TwoWay));
-			return (ITestInterface)new ProxyFactory(typeof(ITestInterface), subject).GetProxy();
+		    return
+		        new Tuple<ITestInterface, CancellationToken>(
+		            (ITestInterface) new ProxyFactory(typeof(ITestInterface), subject).GetProxy(), subject.Token);
 		}
 
         #region Setup/Teardown
@@ -74,19 +79,21 @@ namespace RemoteExecution.Core.UT.Remoting
 		[Test]
 		public void Should_execute_operations_in_order()
         {
+            var helper = GetInvocationHelper();
             using (_repository.Ordered())
 			{
 				Expect.Call(() => _messageDispatcher.Register(_responseHandler));
 
-				Expect.Call(() => _channel.Send(Arg<IMessage>.Is.Anything));
-				Expect.Call(() => _responseHandler.WaitForResponse(TimeSpan.MaxValue, CancellationToken.None));
+			    Expect.Call(_channel.Send(Arg<IMessage>.Is.Anything)).Return(true);
+                Expect.Call(() => _responseHandler.WaitForResponse(DefaultConfig.Timeout, CancellationToken.None));
 
 				Expect.Call(_responseHandler.HandledMessageType).Return(_handlerId);
 				Expect.Call(() => _messageDispatcher.Unregister(_handlerId));
 				Expect.Call(_responseHandler.GetValue());
 			}
 			_repository.ReplayAll();
-			GetInvocationHelper().Hello(5);
+
+            helper.Item1.Hello(5);
 			_repository.VerifyAll();
 		}
 
@@ -95,7 +102,7 @@ namespace RemoteExecution.Core.UT.Remoting
         {
             Expect.Call(_responseHandler.HandledMessageType).Return(_handlerId);
 			_repository.ReplayAll();
-			GetInvocationHelper().Hello(5);
+			GetInvocationHelper().Item1.Hello(5);
 			_channel.AssertWasCalled(ch => ch.Send(Arg<IMessage>.Matches(m => m.CorrelationId == _handlerId)));
 		}
 
@@ -106,7 +113,7 @@ namespace RemoteExecution.Core.UT.Remoting
 			_repository.ReplayAll();
 
 			const int methodArg = 5;
-			GetInvocationHelper().Hello(methodArg);
+			GetInvocationHelper().Item1.Hello(methodArg);
 
 			_channel.AssertWasCalled(ch => ch.Send(Arg<RequestMessage>.Matches(m =>
 				m.Args.SequenceEqual(new object[] { methodArg }) &&
@@ -118,11 +125,12 @@ namespace RemoteExecution.Core.UT.Remoting
 		public void Should_wait_for_response_even_if_method_returns_void()
         {
             _repository.ReplayAll();
-			GetInvocationHelper().Notify("text");
+            var helper = GetInvocationHelper();
+            helper.Item1.Notify("text");
 
 			_channel.AssertWasCalled(ch => ch.Send(Arg<RequestMessage>.Matches(r => r.IsResponseExpected)));
 			_messageDispatcher.AssertWasCalled(d => d.Register(_responseHandler));
-			_responseHandler.AssertWasCalled(h => h.WaitForResponse(TimeSpan.MaxValue, CancellationToken.None));
+			_responseHandler.AssertWasCalled(h => h.WaitForResponse(DefaultConfig.Timeout, CancellationToken.None));
 		}
 	}
 }
