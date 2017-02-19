@@ -120,9 +120,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceFabric.ExternalClien
 EndProject
 Project("{A07B5EB6-E848-4116-A8D0-A826331D98C6}") = "ServiceFabric.App", "ServiceFabric.App\ServiceFabric.App.sfproj", "{BB42CE81-DAFF-4AE1-B4FF-E46608436558}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceFabric.Stateless1", "ServiceFabric.Stateless1\ServiceFabric.Stateless1.csproj", "{7BF64F95-8361-4E15-B784-5310AEF6DA61}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceFabric.Stateless", "ServiceFabric.Stateless1\ServiceFabric.Stateless.csproj", "{7BF64F95-8361-4E15-B784-5310AEF6DA61}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceFabric.Stateless2", "ServiceFabric.Stateless2\ServiceFabric.Stateless2.csproj", "{6384C46B-D682-495B-964F-B3F1BFB06F83}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceFabric.Stateful", "ServiceFabric.Stateless2\ServiceFabric.Stateful.csproj", "{6384C46B-D682-495B-964F-B3F1BFB06F83}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceFabric.Contracts", "ServiceFabric.Contracts\ServiceFabric.Contracts.csproj", "{09370E56-3E6A-4EFF-A9A6-7442C329D836}"
 EndProject

@@ -29,8 +29,8 @@
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ServiceFabric.Stateless1\ServiceFabric.Stateless1.csproj" />
-    <ProjectReference Include="..\ServiceFabric.Stateless2\ServiceFabric.Stateless2.csproj" />
+    <ProjectReference Include="..\ServiceFabric.Stateless1\ServiceFabric.Stateless.csproj" />
+    <ProjectReference Include="..\ServiceFabric.Stateless2\ServiceFabric.Stateful.csproj" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />
   <PropertyGroup>

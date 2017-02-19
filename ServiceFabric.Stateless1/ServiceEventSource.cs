@@ -3,9 +3,9 @@ using System.Diagnostics.Tracing;
 using System.Fabric;
 using System.Threading.Tasks;
 
-namespace ServiceFabric.Stateless1
+namespace ServiceFabric.Stateless
 {
-    [EventSource(Name = "MyCompany-ServiceFabric.App-Stateless1")]
+    [EventSource(Name = "MyCompany-ServiceFabric.App-Stateless")]
     internal sealed class ServiceEventSource : EventSource
     {
         public static readonly ServiceEventSource Current = new ServiceEventSource();

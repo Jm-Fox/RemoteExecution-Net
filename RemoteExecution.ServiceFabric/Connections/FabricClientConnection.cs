@@ -18,6 +18,52 @@ namespace RemoteExecution.ServiceFabric.Connections
     /// </summary>
     public class FabricClientConnection : IClientConnection
     {
+        /// <summary>
+        /// [Singular] event fired when the connection is closed. The listener can suggest a new host and port where the service might be located.
+        /// If not used, reconnection attempts will hit the same host and port.
+        /// </summary>
+        public Action<ClosedConnectionResponse> ConnectionPaused
+        {
+            get { return clientConnection.ConnectionPaused; }
+            set { clientConnection.ConnectionPaused = value; }
+        }
+
+        /// <summary>
+        /// Event fired when connection is restored.
+        /// </summary>
+        public event Action ConnectionRestored
+        {
+            add { clientConnection.ConnectionRestored += value; }
+            remove { clientConnection.ConnectionRestored -= value; }
+        }
+
+        /// <summary>
+        /// Event fired when connection is aborted.
+        /// </summary>
+        public event Action ConnectionAborted
+        {
+            add { clientConnection.ConnectionAborted += value; }
+            remove { clientConnection.ConnectionAborted -= value; }
+        }
+
+        /// <summary>
+        /// Event fired when connection is down.
+        /// </summary>
+        public event Action ConnectionInterrupted
+        {
+            add { clientConnection.ConnectionInterrupted += value; }
+            remove { clientConnection.ConnectionInterrupted -= value; }
+        }
+
+        /// <summary>
+        /// How many times the channel can try to reconnect before aborting.
+        /// </summary>
+        public int RetryAttempts
+        {
+            get { return clientConnection.RetryAttempts; }
+            set { clientConnection.RetryAttempts = value; }
+        }
+
         private static readonly Random Random = new Random();
         private readonly DurableClientConnection clientConnection;
         private ResolvedServiceEndpoint selectedEndpoint;
@@ -60,10 +106,10 @@ namespace RemoteExecution.ServiceFabric.Connections
             selectedEndpoint = ResolveAnyEndpoint().Result;
             
             clientConnection = new DurableClientConnection(selectedEndpoint.Address);
-            clientConnection.ConnectionPaused = ConnectionClosed;
+            clientConnection.ConnectionPaused = OnConnectionPaused;
         }
 
-        private void ConnectionClosed(ClosedConnectionResponse response)
+        private void OnConnectionPaused(ClosedConnectionResponse response)
         {
             if (IsSelectedPartitionDown())
             {

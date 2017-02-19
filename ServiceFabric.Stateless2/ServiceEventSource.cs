@@ -3,9 +3,9 @@ using System.Diagnostics.Tracing;
 using System.Fabric;
 using System.Threading.Tasks;
 
-namespace ServiceFabric.Stateless2
+namespace ServiceFabric.Stateful
 {
-    [EventSource(Name = "MyCompany-ServiceFabric.App-Stateless2")]
+    [EventSource(Name = "MyCompany-ServiceFabric.App-Stateful")]
     internal sealed class ServiceEventSource : EventSource
     {
         public static readonly ServiceEventSource Current = new ServiceEventSource();
@@ -61,7 +61,7 @@ namespace ServiceFabric.Stateless2
         }
 
         [NonEvent]
-        public void ServiceMessage(StatelessServiceContext serviceContext, string message, params object[] args)
+        public void ServiceMessage(StatefulServiceContext serviceContext, string message, params object[] args)
         {
             if (this.IsEnabled())
             {
@@ -69,7 +69,7 @@ namespace ServiceFabric.Stateless2
                 ServiceMessage(
                     serviceContext.ServiceName.ToString(),
                     serviceContext.ServiceTypeName,
-                    serviceContext.InstanceId,
+                    serviceContext.ReplicaId,
                     serviceContext.PartitionId,
                     serviceContext.CodePackageActivationContext.ApplicationName,
                     serviceContext.CodePackageActivationContext.ApplicationTypeName,

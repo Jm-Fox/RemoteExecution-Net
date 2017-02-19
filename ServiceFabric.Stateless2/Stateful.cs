@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 using Microsoft.ServiceFabric.Services.Communication.Runtime;
 using Microsoft.ServiceFabric.Services.Runtime;
 
-namespace ServiceFabric.Stateless2
+namespace ServiceFabric.Stateful
 {
     /// <summary>
     /// An instance of this class is created for each service instance by the Service Fabric runtime.
     /// </summary>
-    internal sealed class Stateless2 : StatelessService
+    internal sealed class Stateful : StatefulService
     {
-        public Stateless2(StatelessServiceContext context)
+        public Stateful(StatefulServiceContext context)
             : base(context)
         { }
 
@@ -21,9 +21,9 @@ namespace ServiceFabric.Stateless2
         /// Optional override to create listeners (e.g., TCP, HTTP) for this service replica to handle client or user requests.
         /// </summary>
         /// <returns>A collection of listeners.</returns>
-        protected override IEnumerable<ServiceInstanceListener> CreateServiceInstanceListeners()
+        protected override IEnumerable<ServiceReplicaListener> CreateServiceReplicaListeners()
         {
-            return new ServiceInstanceListener[0];
+            return new ServiceReplicaListener[0];
         }
 
         /// <summary>

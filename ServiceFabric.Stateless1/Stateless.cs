@@ -5,15 +5,20 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.ServiceFabric.Services.Communication.Runtime;
 using Microsoft.ServiceFabric.Services.Runtime;
+using RemoteExecution.Dispatchers;
+using RemoteExecution.ServiceFabric.Endpoints;
+using ServiceFabric.Contracts;
 
-namespace ServiceFabric.Stateless1
+namespace ServiceFabric.Stateless
 {
     /// <summary>
     /// An instance of this class is created for each service instance by the Service Fabric runtime.
     /// </summary>
-    internal sealed class Stateless1 : StatelessService
+    internal sealed class Stateless : StatelessService
     {
-        public Stateless1(StatelessServiceContext context)
+        private bool loop = true;
+
+        public Stateless(StatelessServiceContext context)
             : base(context)
         { }
 
@@ -23,8 +28,14 @@ namespace ServiceFabric.Stateless1
         /// <returns>A collection of listeners.</returns>
         protected override IEnumerable<ServiceInstanceListener> CreateServiceInstanceListeners()
         {
-            return new ServiceInstanceListener[0];
+            OperationDispatcher dispatcher = new OperationDispatcher();
+            dispatcher.RegisterHandler<IWeakCalculator>(new WeakCalculator {Crashed = () => loop = false});
+            return new[] {
+                new ServiceInstanceListener(c => new StatelessCommunicationListener(c, "WeakCalculator", dispatcher))
+            };
         }
+
+
 
         /// <summary>
         /// This is the main entry point for your service instance.
@@ -32,12 +43,9 @@ namespace ServiceFabric.Stateless1
         /// <param name="cancellationToken">Canceled when Service Fabric needs to shut down this service instance.</param>
         protected override async Task RunAsync(CancellationToken cancellationToken)
         {
-            // TODO: Replace the following sample code with your own logic 
-            //       or remove this RunAsync override if it's not needed in your service.
-
             long iterations = 0;
 
-            while (true)
+            while (loop)
             {
                 cancellationToken.ThrowIfCancellationRequested();
 

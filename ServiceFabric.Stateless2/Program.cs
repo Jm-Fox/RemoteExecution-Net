@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Threading;
 using Microsoft.ServiceFabric.Services.Runtime;
 
-namespace ServiceFabric.Stateless2
+namespace ServiceFabric.Stateful
 {
     internal static class Program
     {
@@ -20,9 +20,9 @@ namespace ServiceFabric.Stateless2
                 // an instance of the class is created in this host process.
 
                 ServiceRuntime.RegisterServiceAsync("Stateless2Type",
-                    context => new Stateless2(context)).GetAwaiter().GetResult();
+                    context => new Stateful(context)).GetAwaiter().GetResult();
 
-                ServiceEventSource.Current.ServiceTypeRegistered(Process.GetCurrentProcess().Id, typeof(Stateless2).Name);
+                ServiceEventSource.Current.ServiceTypeRegistered(Process.GetCurrentProcess().Id, typeof(Stateful).Name);
 
                 // Prevents this host process from terminating so services keep running.
                 Thread.Sleep(Timeout.Infinite);
