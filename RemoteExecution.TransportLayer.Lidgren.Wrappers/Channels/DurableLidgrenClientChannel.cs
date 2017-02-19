@@ -37,7 +37,7 @@ namespace RemoteExecution.Channels
         /// [Singular] event fired when the connection is closed. The listener can suggest a new host and port where the service might be located.
         /// If not used, reconnection attempts will hit the same host and port.
         /// </summary>
-        public Action<ClosedConnectionResponse> ConnectionPaused { get; set; }
+        public Action<PausedConnectionResponse> ConnectionPaused { get; set; }
 
         /// <summary>
         /// Event fired when connection is restored.
@@ -99,28 +99,28 @@ namespace RemoteExecution.Channels
             {
                 ConnectionInterrupted?.Invoke();
                 attemptingReconnection = true;
-                ClosedConnectionResponse response  = new ClosedConnectionResponse
+                PausedConnectionResponse response  = new PausedConnectionResponse
                 {
                     ReconnectHost = Host,
                     ReconnectPort = Port
                 };
-                ConnectionPaused?.Invoke(response);
-                if (!response.Abort)
+                while (!gracefulClosing && failures < RetryAttempts)
                 {
-                    while (!gracefulClosing && failures < RetryAttempts)
+                    response.FailedAttempts = failures;
+                    ConnectionPaused?.Invoke(response);
+                    if (response.Abort)
+                        break;
+                    NetConnection newConnection = Client.Connect(response.ReconnectHost, response.ReconnectPort);
+                    try
                     {
-                        NetConnection newConnection = Client.Connect(response.ReconnectHost, response.ReconnectPort);
-                        try
-                        {
-                            newConnection.WaitForConnectionToOpen();
-                            RestoreConnection(newConnection, response);
-                            ConnectionRestored?.Invoke();
-                            return;
-                        }
-                        catch (ConnectionOpenException)
-                        {
-                            failures++;
-                        }
+                        newConnection.WaitForConnectionToOpen();
+                        RestoreConnection(newConnection, response);
+                        ConnectionRestored?.Invoke();
+                        return;
+                    }
+                    catch (ConnectionOpenException)
+                    {
+                        failures++;
                     }
                 }
                 ConnectionAborted?.Invoke();
@@ -158,7 +158,7 @@ namespace RemoteExecution.Channels
             // A(n extremely rare) race condition can leave messages in the Queue, not to be resent until the next failure.
             // This ensures no message is left behind.
             if (hasPendingOutgoing)
-                SendPendingOutgoing();
+                DumpPendingOutgoing();
             Inner.SendData(data);
             return true;
         }
@@ -175,17 +175,17 @@ namespace RemoteExecution.Channels
             Dispose();
         }
         
-        private void RestoreConnection(NetConnection connection, ClosedConnectionResponse response)
+        private void RestoreConnection(NetConnection connection, PausedConnectionResponse response)
         {
             Connection = connection;
             attemptingReconnection = false;
             Host = response.ReconnectHost;
             Port = response.ReconnectPort;
             failures = 0;
-            SendPendingOutgoing();
+            DumpPendingOutgoing();
         }
         
-        private void SendPendingOutgoing()
+        private void DumpPendingOutgoing()
         {
             DefaultConfig.TaskScheduler.Execute(() =>
             {

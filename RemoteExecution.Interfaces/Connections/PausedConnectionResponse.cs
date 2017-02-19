@@ -3,8 +3,12 @@
     /// <summary>
     /// Plain-old-data for responding to a connection that closed unexpectedly.
     /// </summary>
-    public class ClosedConnectionResponse
+    public class PausedConnectionResponse
     {
+        /// <summary>
+        /// How many failed attempts have been made to restore the connection.
+        /// </summary>
+        public int FailedAttempts = 0;
         /// <summary>
         /// Connection should fail.
         /// </summary>

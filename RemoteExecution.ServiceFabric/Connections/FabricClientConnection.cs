@@ -22,7 +22,7 @@ namespace RemoteExecution.ServiceFabric.Connections
         /// [Singular] event fired when the connection is closed. The listener can suggest a new host and port where the service might be located.
         /// If not used, reconnection attempts will hit the same host and port.
         /// </summary>
-        public Action<ClosedConnectionResponse> ConnectionPaused
+        public Action<PausedConnectionResponse> ConnectionPaused
         {
             get { return clientConnection.ConnectionPaused; }
             set { clientConnection.ConnectionPaused = value; }
@@ -109,7 +109,7 @@ namespace RemoteExecution.ServiceFabric.Connections
             clientConnection.ConnectionPaused = OnConnectionPaused;
         }
 
-        private void OnConnectionPaused(ClosedConnectionResponse response)
+        private void OnConnectionPaused(PausedConnectionResponse response)
         {
             if (IsSelectedPartitionDown())
             {

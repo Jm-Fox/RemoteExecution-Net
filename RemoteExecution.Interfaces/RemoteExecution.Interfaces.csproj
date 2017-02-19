@@ -55,7 +55,7 @@
     <Compile Include="Config\DefaultConfig.cs" />
     <Compile Include="Config\IConnectionConfig.cs" />
     <Compile Include="Config\IServerConfig.cs" />
-    <Compile Include="Connections\ClosedConnectionResponse.cs" />
+    <Compile Include="Connections\PausedConnectionResponse.cs" />
     <Compile Include="Connections\IClientConnection.cs" />
     <Compile Include="Connections\IDurableConnection.cs" />
     <Compile Include="Connections\IRemoteConnection.cs" />

@@ -11,7 +11,7 @@ namespace RemoteExecution.Connections
         /// [Singular] event fired when the connection is closed. The listener can suggest a new host and port where the service might be located.
         /// If not used, reconnection attempts will hit the same host and port.
         /// </summary>
-        Action<ClosedConnectionResponse> ConnectionPaused { get; set; }
+        Action<PausedConnectionResponse> ConnectionPaused { get; set; }
 
         /// <summary>
         /// How many times the channel can try to reconnect before aborting.
