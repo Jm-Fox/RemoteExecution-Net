@@ -10,7 +10,7 @@ namespace ServiceFabric.Stateful
 
         public StrongCalculator()
         {
-            FabricClientConnection connection = new FabricClientConnection(new Uri("fabric:/MyApplication/StatelessType"));
+            FabricClientConnection connection = new FabricClientConnection(new Uri("fabric:/ServiceFabric.App/Stateless"));
             connection.Open();
             remoteWeakCalculator = connection.RemoteExecutor.Create<IWeakCalculator>();
         }

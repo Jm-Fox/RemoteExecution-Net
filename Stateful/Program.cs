@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Threading;
 using Microsoft.ServiceFabric.Services.Runtime;
+using RemoteExecution;
 
 namespace ServiceFabric.Stateful
 {
@@ -12,6 +13,7 @@ namespace ServiceFabric.Stateful
         /// </summary>
         private static void Main()
         {
+            Configurator.Configure();
             try
             {
                 // The ServiceManifest.XML file defines one or more service type names.
@@ -19,7 +21,7 @@ namespace ServiceFabric.Stateful
                 // When Service Fabric creates an instance of this service type,
                 // an instance of the class is created in this host process.
 
-                ServiceRuntime.RegisterServiceAsync("Stateless2Type",
+                ServiceRuntime.RegisterServiceAsync("StatefulType",
                     context => new Stateful(context)).GetAwaiter().GetResult();
 
                 ServiceEventSource.Current.ServiceTypeRegistered(Process.GetCurrentProcess().Id, typeof(Stateful).Name);

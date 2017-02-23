@@ -41,5 +41,10 @@ namespace RemoteExecution.Endpoints
 		/// Starts accepting incoming connections.
 		/// </summary>
 		void Start();
+
+        /// <summary>
+        /// Port (only defined if listening)
+        /// </summary>
+        int Port { get; }
 	}
 }

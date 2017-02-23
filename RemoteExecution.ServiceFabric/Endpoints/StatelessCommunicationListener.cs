@@ -37,7 +37,7 @@ namespace RemoteExecution.ServiceFabric.Endpoints
 		/// <param name="dispatcher">Operation dispatcher that would be used for all connections.</param>
         public StatelessCommunicationListener(ServiceContext context, string endPointListenerName,
             IOperationDispatcher dispatcher)
-            : this(CommonHelper.GetUriFromContext(context, endPointListenerName), dispatcher)
+            : this(context.GetEndpoint(endPointListenerName), dispatcher)
         {
         }
 
@@ -50,9 +50,9 @@ namespace RemoteExecution.ServiceFabric.Endpoints
         {
             Start();
             Uri uri = new Uri(Uri);
-            if (this.GetPort() != uri.Port)
+            if (Port != uri.Port)
             {
-                Uri = $"{uri.Scheme}://{uri.Authority}:{this.GetPort()}{uri.AbsolutePath}";
+                Uri = $"{uri.Scheme}://{uri.Authority}:{Port}{uri.AbsolutePath}";
             }
             return Task.FromResult(Uri);
         }

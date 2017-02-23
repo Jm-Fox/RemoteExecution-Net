@@ -109,6 +109,11 @@ namespace RemoteExecution.Endpoints
 		/// </summary>
 		public IBroadcastRemoteExecutor BroadcastRemoteExecutor { get; private set; }
 
+        /// <summary>
+        /// Port (only defined if listening)
+        /// </summary>
+        public int Port => _listener.Port;
+
 		#endregion
 
 		/// <summary>

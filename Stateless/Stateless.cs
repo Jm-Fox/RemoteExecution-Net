@@ -1,19 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Fabric;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.ServiceFabric.Services.Communication.Runtime;
 using Microsoft.ServiceFabric.Services.Runtime;
+using RemoteExecution.Dispatchers;
+using ServiceFabric.Contracts;
+using RemoteExecution.ServiceFabric.Endpoints;
 
-namespace ServiceFabric.Stateful
+namespace ServiceFabric.Stateless
 {
     /// <summary>
     /// An instance of this class is created for each service instance by the Service Fabric runtime.
     /// </summary>
-    internal sealed class Stateful : StatefulService
+    internal sealed class Stateless : StatelessService
     {
-        public Stateful(StatefulServiceContext context)
+        private bool loop = true;
+
+        public Stateless(StatelessServiceContext context)
             : base(context)
         { }
 
@@ -21,10 +27,16 @@ namespace ServiceFabric.Stateful
         /// Optional override to create listeners (e.g., TCP, HTTP) for this service replica to handle client or user requests.
         /// </summary>
         /// <returns>A collection of listeners.</returns>
-        protected override IEnumerable<ServiceReplicaListener> CreateServiceReplicaListeners()
+        protected override IEnumerable<ServiceInstanceListener> CreateServiceInstanceListeners()
         {
-            return new ServiceReplicaListener[0];
+            OperationDispatcher dispatcher = new OperationDispatcher();
+            dispatcher.RegisterHandler<IWeakCalculator>(new WeakCalculator { Crashed = () => loop = false });
+            return new[] {
+                new ServiceInstanceListener(c => new StatelessCommunicationListener(c, "WeakCalculator", dispatcher))
+            };
         }
+
+
 
         /// <summary>
         /// This is the main entry point for your service instance.
@@ -32,12 +44,9 @@ namespace ServiceFabric.Stateful
         /// <param name="cancellationToken">Canceled when Service Fabric needs to shut down this service instance.</param>
         protected override async Task RunAsync(CancellationToken cancellationToken)
         {
-            // TODO: Replace the following sample code with your own logic 
-            //       or remove this RunAsync override if it's not needed in your service.
-
             long iterations = 0;
 
-            while (true)
+            while (loop)
             {
                 cancellationToken.ThrowIfCancellationRequested();
 

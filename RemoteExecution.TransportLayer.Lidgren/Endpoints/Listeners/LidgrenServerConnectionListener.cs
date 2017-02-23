@@ -92,7 +92,12 @@ namespace RemoteExecution.Endpoints.Listeners
 		/// </summary>
 		public bool IsListening { get { return _netServer.Status == NetPeerStatus.Running; } }
 
-		#endregion
+	    /// <summary>
+	    /// Port (only defined if listening)
+	    /// </summary>
+	    public int Port => _netServer.Port;
+
+	    #endregion
 
 		private LidgrenDuplexChannel ExtractChannel(NetConnection netConnection)
 		{

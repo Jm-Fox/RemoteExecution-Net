@@ -77,7 +77,7 @@ namespace RemoteExecution.ServiceFabric.Connections
         public ServicePartitionResolver Resolver;
 
         /// <summary>
-        /// Event fired when the connection is finally closed (todo: finish implementing this)
+        /// Event fired when the connection is finally closed
         /// </summary>
         public event Action Closed;
 
@@ -88,8 +88,6 @@ namespace RemoteExecution.ServiceFabric.Connections
         public FabricClientConnection(Uri fabricAddress)
             : this(fabricAddress, ServicePartitionResolver.GetDefault())
         {
-            // todo: remove (here temporarily to stop compiler warning/error)
-            Closed?.Invoke();
         }
 
         /// <summary>
@@ -104,9 +102,12 @@ namespace RemoteExecution.ServiceFabric.Connections
             Resolver = resolver;
 
             selectedEndpoint = ResolveAnyEndpoint().Result;
-            
-            clientConnection = new DurableClientConnection(selectedEndpoint.Address);
-            clientConnection.ConnectionPaused = OnConnectionPaused;
+
+            clientConnection = new DurableClientConnection(selectedEndpoint.Address)
+            {
+                ConnectionPaused = OnConnectionPaused
+            };
+            clientConnection.Closed += () => Closed?.Invoke();
         }
 
         private void OnConnectionPaused(PausedConnectionResponse response)

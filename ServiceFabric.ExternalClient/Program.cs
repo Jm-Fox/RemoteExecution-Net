@@ -1,4 +1,5 @@
 ﻿using System;
+using RemoteExecution;
 using RemoteExecution.Connections;
 using ServiceFabric.Contracts;
 
@@ -8,6 +9,8 @@ namespace ServiceFabric.ExternalClient
     {
         static void Main(string[] args)
         {
+            // todo: durable
+            Configurator.Configure();
             // note that at most one process can use a single UDP port on a machine.
             // Because of this, the service fabric services exposed to the client via this port cannot be replicated
             // on local.1node
@@ -19,8 +22,8 @@ namespace ServiceFabric.ExternalClient
             // However, the ServiceFabric.Stateless executable is only reachable via the naming service, so it doesn't
             // require a dedicated port. This means that when using local.5node, there will be 5 stateless executables.
             // Thus replacing this internal client is virtually free, since it just takes talking to the naming service.
-            using (var strongCalculator = new DurableClientConnection("net://localhost:3232/StrongCalculator"))
-            using (var weakCounter = new DurableClientConnection("net://localhost:3233/WeakCounter"))
+            using (var strongCalculator = new DurableClientConnection("net://localhost:3232/StrongCalculatorApplicationId"))
+            using (var weakCounter = new DurableClientConnection("net://localhost:3233/WeakCounterApplicationId"))
             {
                 strongCalculator.ConnectionAborted += () => Console.WriteLine("\tStrong calculator connection aborted.");
                 strongCalculator.ConnectionInterrupted += () => Console.WriteLine("\tStrong calculator connection interrupted.");

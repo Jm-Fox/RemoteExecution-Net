@@ -5,20 +5,20 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.ServiceFabric.Services.Communication.Runtime;
 using Microsoft.ServiceFabric.Services.Runtime;
-using RemoteExecution.Dispatchers;
+using RemoteExecution.Connections;
 using RemoteExecution.ServiceFabric.Endpoints;
 using ServiceFabric.Contracts;
 
-namespace ServiceFabric.Stateless
+namespace ServiceFabric.Stateful
 {
     /// <summary>
     /// An instance of this class is created for each service instance by the Service Fabric runtime.
     /// </summary>
-    internal sealed class Stateless : StatelessService
+    internal sealed class Stateful : StatefulService
     {
         private bool loop = true;
 
-        public Stateless(StatelessServiceContext context)
+        public Stateful(StatefulServiceContext context)
             : base(context)
         { }
 
@@ -26,16 +26,23 @@ namespace ServiceFabric.Stateless
         /// Optional override to create listeners (e.g., TCP, HTTP) for this service replica to handle client or user requests.
         /// </summary>
         /// <returns>A collection of listeners.</returns>
-        protected override IEnumerable<ServiceInstanceListener> CreateServiceInstanceListeners()
+        protected override IEnumerable<ServiceReplicaListener> CreateServiceReplicaListeners()
         {
-            OperationDispatcher dispatcher = new OperationDispatcher();
-            dispatcher.RegisterHandler<IWeakCalculator>(new WeakCalculator {Crashed = () => loop = false});
-            return new[] {
-                new ServiceInstanceListener(c => new StatelessCommunicationListener(c, "WeakCalculator", dispatcher))
+            return new[]
+            {
+                new ServiceReplicaListener(c => new
+                        StatefulCommunicationListener(c, "StrongCalculator",
+                            cn => cn.OperationDispatcher.RegisterHandler<IWeakCalculator>(new StrongCalculator())),
+                    "StrongCalculatorUniqueEndpointName"),
+                new ServiceReplicaListener(c => new
+                    StatefulCommunicationListener(c, "WeakCounter",
+                        cn =>
+                            cn.OperationDispatcher.RegisterHandler<IWeakCounter>(new WeakCounter
+                            {
+                                Crashed = () => loop = false
+                            })), "WeakCounterUniqueEndpointName"),
             };
         }
-
-
 
         /// <summary>
         /// This is the main entry point for your service instance.
@@ -43,6 +50,9 @@ namespace ServiceFabric.Stateless
         /// <param name="cancellationToken">Canceled when Service Fabric needs to shut down this service instance.</param>
         protected override async Task RunAsync(CancellationToken cancellationToken)
         {
+            // TODO: Replace the following sample code with your own logic 
+            //       or remove this RunAsync override if it's not needed in your service.
+
             long iterations = 0;
 
             while (loop)

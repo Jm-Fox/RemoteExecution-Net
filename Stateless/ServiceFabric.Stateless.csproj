@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x64</Platform>
-    <ProjectGuid>{7BF64F95-8361-4E15-B784-5310AEF6DA61}</ProjectGuid>
+    <ProjectGuid>{15F0F052-0DAE-4DEB-90C1-56BD380D6385}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ServiceFabric.Stateless</RootNamespace>
-    <AssemblyName>ServiceFabric.Stateless</AssemblyName>
+    <AssemblyName>Stateless</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -37,6 +37,9 @@
   </PropertyGroup>
   <PropertyGroup>
     <IsServiceFabricServiceProject>true</IsServiceFabricServiceProject>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>ServiceFabric.Stateless.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.ServiceFabric.Data, Version=5.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=AMD64">
@@ -68,6 +71,7 @@
       <HintPath>..\packages\Microsoft.ServiceFabric.5.4.145\lib\net45\System.Fabric.Strings.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Runtime.Serialization" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -84,16 +88,20 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\RemoteExecution.Core\RemoteExecution.Core.csproj">
-      <Project>{1F49092C-ADF4-4F6E-B383-2AE4CC3EF10B}</Project>
+      <Project>{1f49092c-adf4-4f6e-b383-2ae4cc3ef10b}</Project>
       <Name>RemoteExecution.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\RemoteExecution.Interfaces\RemoteExecution.Interfaces.csproj">
-      <Project>{DDB0303B-C762-445D-9CB1-A7D03239B660}</Project>
+      <Project>{ddb0303b-c762-445d-9cb1-a7d03239b660}</Project>
       <Name>RemoteExecution.Interfaces</Name>
     </ProjectReference>
     <ProjectReference Include="..\RemoteExecution.ServiceFabric\RemoteExecution.ServiceFabric.csproj">
-      <Project>{a3ffa22d-2a9f-4d99-894f-826012e0cc4e}</Project>
+      <Project>{A3FFA22D-2A9F-4D99-894F-826012E0CC4E}</Project>
       <Name>RemoteExecution.ServiceFabric</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RemoteExecution\RemoteExecution.csproj">
+      <Project>{A46D4206-7D05-4BF6-A30D-4D49A925323D}</Project>
+      <Name>RemoteExecution</Name>
     </ProjectReference>
     <ProjectReference Include="..\ServiceFabric.Contracts\ServiceFabric.Contracts.csproj">
       <Project>{09370e56-3e6a-4eff-a9a6-7442c329d836}</Project>

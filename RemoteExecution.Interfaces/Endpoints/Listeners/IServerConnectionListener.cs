@@ -28,5 +28,10 @@ namespace RemoteExecution.Endpoints.Listeners
 		/// Starts listening for incoming connections.
 		/// </summary>
 		void StartListening();
+
+        /// <summary>
+        /// Port (only defined if listening)
+        /// </summary>
+	    int Port { get; }
 	}
 }

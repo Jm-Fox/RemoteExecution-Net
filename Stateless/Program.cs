@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Threading;
 using Microsoft.ServiceFabric.Services.Runtime;
+using RemoteExecution;
 
 namespace ServiceFabric.Stateless
 {
@@ -12,6 +13,7 @@ namespace ServiceFabric.Stateless
         /// </summary>
         private static void Main()
         {
+            Configurator.Configure();
             try
             {
                 // The ServiceManifest.XML file defines one or more service type names.

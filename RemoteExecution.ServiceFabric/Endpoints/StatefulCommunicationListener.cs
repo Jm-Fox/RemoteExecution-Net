@@ -53,7 +53,7 @@ namespace RemoteExecution.ServiceFabric.Endpoints
         /// <param name="endPointListenerName">Name of endpoint in service manifest</param>
         /// <param name="initialized">Action to be performed upon initialization (IRemoteConnection is not accessible until this point)</param>
         public StatefulCommunicationListener(ServiceContext context, string endPointListenerName, Action<IRemoteConnection> initialized)
-            : this(CommonHelper.GetUriFromContext(context, endPointListenerName), initialized)
+            : this(context.GetEndpoint(endPointListenerName), initialized)
         {
         }
 
@@ -66,9 +66,9 @@ namespace RemoteExecution.ServiceFabric.Endpoints
         {
             Start();
             Uri uri = new Uri(Uri);
-            if (this.GetPort() != uri.Port)
+            if (Port != uri.Port)
             {
-                Uri = $"{uri.Scheme}://{uri.Authority}:{this.GetPort()}{uri.AbsolutePath}";
+                Uri = $"{uri.Scheme}://{uri.Authority}:{Port}{uri.AbsolutePath}";
             }
             return Task.FromResult(Uri);
         }

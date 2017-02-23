@@ -9,7 +9,7 @@ namespace RemoteExecution.ServiceFabric
     {
         public static string Loopback = IPAddress.Loopback.ToString();
 
-        public static string GetUriFromContext(ServiceContext context, string endpointName)
+        public static string GetEndpoint(this ServiceContext context, string endpointName)
         {
             EndpointResourceDescription description = context.CodePackageActivationContext.GetEndpoint(endpointName);
             string portstr = description.Port == 0 ? "" : $":{description.Port}";
