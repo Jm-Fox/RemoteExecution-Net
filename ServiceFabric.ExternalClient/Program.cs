@@ -1,5 +1,6 @@
 ﻿using System;
-using RemoteExecution;
+using System.Threading;
+using RemoteExecution.Channels;
 using RemoteExecution.Connections;
 using ServiceFabric.Contracts;
 
@@ -10,7 +11,7 @@ namespace ServiceFabric.ExternalClient
         static void Main(string[] args)
         {
             // todo: durable
-            Configurator.Configure();
+            DurableConfigurator.Configure();
             // note that at most one process can use a single UDP port on a machine.
             // Because of this, the service fabric services exposed to the client via this port cannot be replicated
             // on local.1node
@@ -25,22 +26,22 @@ namespace ServiceFabric.ExternalClient
             using (var strongCalculator = new DurableClientConnection("net://localhost:3232/StrongCalculatorApplicationId"))
             using (var weakCounter = new DurableClientConnection("net://localhost:3233/WeakCounterApplicationId"))
             {
+                //strongCalculator.Open();
+                weakCounter.Open();
                 strongCalculator.ConnectionAborted += () => Console.WriteLine("\tStrong calculator connection aborted.");
                 strongCalculator.ConnectionInterrupted += () => Console.WriteLine("\tStrong calculator connection interrupted.");
                 strongCalculator.ConnectionRestored += () => Console.WriteLine("\tStrong calculator connection restored.");
                 weakCounter.ConnectionAborted += () => Console.WriteLine("\tWeak counter connection aborted.");
                 weakCounter.ConnectionInterrupted += () => Console.WriteLine("\tWeak counter connection interrupted.");
                 weakCounter.ConnectionRestored += () => Console.WriteLine("\tWeak counter connection restored.");
-                strongCalculator.Open();
-                weakCounter.Open();
-                var calculator = strongCalculator.RemoteExecutor.Create<IWeakCalculator>();
+                //var calculator = strongCalculator.RemoteExecutor.Create<IWeakCalculator>();
                 var counter = weakCounter.RemoteExecutor.Create<IWeakCounter>();
                 Console.WriteLine("Connected to StrongCalculator and WeakCounter.");
 
-                Console.WriteLine("4 + 5 = " + calculator.Add(4, 5));
-                Console.WriteLine("Crashing calculator");
-                calculator.Crash();
-                Console.WriteLine("9 + 5 = " + calculator.Add(9, 5));
+                //Console.WriteLine("4 + 5 = " + calculator.Add(4, 5));
+                //Console.WriteLine("Crashing calculator");
+                //calculator.Crash();
+                //Console.WriteLine("9 + 5 = " + calculator.Add(9, 5));
                 Console.WriteLine("Incrementing...");
                 counter.Increment();
                 Console.WriteLine("Incrementing...");
@@ -52,10 +53,29 @@ namespace ServiceFabric.ExternalClient
                 Console.WriteLine("Count: " + counter.GetCount());
                 Console.WriteLine("Crashing counter...");
                 counter.Crash();
-                Console.WriteLine("3 + 2 = " + calculator.Add(3, 2));
+                // Wait a short while to ensure crash
+                Console.WriteLine("Sleeping to ensure service crashes before next call");
+                Thread.Sleep(1500);
+                //Console.WriteLine("3 + 2 = " + calculator.Add(3, 2));
                 Console.WriteLine("Incrementing...");
-                counter.Increment();
-                Console.WriteLine("Count: " + counter.GetCount());
+                try
+                {
+                    counter.Increment();
+                    Console.WriteLine("Count: " + counter.GetCount());
+                }
+                catch (ConnectionOpenException)
+                {
+                    Console.WriteLine("Connection was not re-established soon enough.");
+                    Console.WriteLine("Consider increasing timeout, retry attempts, or ");
+                    Console.WriteLine("decreasing time until the service comes back online.");
+                    Console.WriteLine("Done. Press enter to exit.");
+                    Console.ReadLine();
+                    return;
+                }
+
+                Console.WriteLine("Count was not persisted because example service does not use persistence.");
+                Console.WriteLine("Should persistence be applied (ReliableCollections) or otherwise,");
+                Console.WriteLine("then the client would not see any issues.");
 
                 Console.WriteLine("Done. Press enter to exit.");
                 Console.ReadLine();
